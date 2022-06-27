@@ -1,0 +1,11 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.option{
+  @apply flex flex-col mx-2 my-2 font-semibold items-center px-6 py-2 min-w-[8rem] rounded-xl border shadow-lg border-blue-400 transition-all ease-in duration-75;
+}
+
+.file-input {
+  @apply block text-sm text-gray-900 border  rounded-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold;
+}
