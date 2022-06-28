@@ -16,6 +16,7 @@ class CreateBrandsTable extends Migration
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique(); 
+            $table->softDeletes();
         });
         DB::table('brands')->insert([
             ["id" => 1, "name" => "Ray-BanAdd"],

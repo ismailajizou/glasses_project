@@ -1,4 +1,5 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
+import Pagination from "@/components/pagination/Pagination";
 import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
@@ -141,7 +142,7 @@ const GlassesPage = ({}) => {
                         View
                       </a>
                       <a
-                        href={`glasses/${id}`}
+                        href={`glasses/${id}/edit`}
                         className="font-medium text-blue-500 hover:underline"
                       >
                         Edit
@@ -150,40 +151,25 @@ const GlassesPage = ({}) => {
                   </tr>
                 ))
               ) : (
-                <tr  className="">
-                  <td colSpan={5} className="text-center text-4xl ">No Records were found</td>
+                <tr className="">
+                  <td colSpan={5} className="text-center text-4xl ">
+                    No Records were found
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-        <div className="flex flex-col items-center mt-4">
-          <span className="text-sm text-gray-800">
-            Showing{" "}
-            <span className="font-semibold text-gray-900">{data.from}</span> to{" "}
-            <span className="font-semibold text-gray-900">{data.to}</span> of{" "}
-            <span className="font-semibold text-gray-900">{data.total}</span>{" "}
-            Entries
-          </span>
-          <div className="inline-flex mt-2 xs:mt-0">
-            <button
-              onClick={() => previous()}
-              className="inline-flex items-center py-2 px-4 text-sm font-medium rounded-l bg-gray-800 border-gray-700 text-gray-400 enabled:hover:bg-gray-700 enabled:hover:text-white disabled:opacity-60 disabled:cursor-not-allowed"
-              disabled={!data.links[0].url}
-            >
-              <HiArrowNarrowLeft className="mr-2" />
-              Prev
-            </button>
-            <button
-              onClick={() => next()}
-              className="inline-flex items-center py-2 px-4 text-sm font-medium rounded-r border-0 border-l bg-gray-800 border-gray-700 text-gray-400 enabled:hover:bg-gray-700 enabled:hover:text-white disabled:opacity-60 disabled:cursor-not-allowed"
-              disabled={!data.links.at(-1).url}
-            >
-              Next
-              <HiArrowNarrowRight className="ml-2" />
-            </button>
-          </div>
-        </div>
+        <Pagination
+          from={data.from}
+          to={data.to}
+          total={data.total}
+          next={next}
+          previous={previous}
+          pageIndex={pageIndex}
+          setPageIndex={setPageIndex}
+          links={data.links}
+        />
       </div>
     </AdminLayout>
   );

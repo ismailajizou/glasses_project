@@ -16,6 +16,7 @@ class CreateCollectionsTable extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->string("name")->unique();
+            $table->softDeletes();
         });
         DB::table('collections')->insert([
             ["id" => 1, "name" => "Collection 1"],

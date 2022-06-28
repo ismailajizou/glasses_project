@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages";
 import NotFound from "./pages/404";
+import BrandsPage from "./pages/admin/brands";
+import CollectionsPage from "./pages/admin/collections";
 import Dashboard from "./pages/admin/dashboard";
 import AddGlassesPage from "./pages/admin/glasses/add";
 import EditPage from "./pages/admin/glasses/edit";
@@ -20,6 +22,8 @@ function App({}) {
           <Route path=":id" element={<GlassesById />} />
           <Route path=":id/edit" element={<EditPage />} />
         </Route>
+        <Route path="brands" element={<BrandsPage />} />
+        <Route path="collections" element={<CollectionsPage />} />
         <Route path="login" element={<LoginAdmin />} />
       </Route>
       <Route path="*" element={<NotFound />} />

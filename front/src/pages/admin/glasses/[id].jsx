@@ -1,10 +1,12 @@
 import Color from "@/components/Color";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import http, { csrf } from "@/helpers/http";
 import { capitalize } from "@/helpers/stringFormatters";
 import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const GlassesById = ({}) => {
@@ -12,6 +14,10 @@ const GlassesById = ({}) => {
   const { id } = useParams();
   const { data: item, error, mutate } = useFetch("/glasses/" + id);
   const to = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
+
   const deleteItem = async () => {
     try {
       await csrf();
@@ -37,7 +43,7 @@ const GlassesById = ({}) => {
               Modify
             </button>
             <button
-              onClick={() => deleteItem()}
+              onClick={() => openModal()}
               className="text-white flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
             >
               Delete
@@ -103,6 +109,16 @@ const GlassesById = ({}) => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isOpen}
+        closeModal={closeModal}
+        title={"Confirmation"}
+        onSubmit={deleteItem}
+        actionName="Delete"
+        actionColor="danger"
+      >
+        <p>Are you sure you want to delete this item?</p>
+      </ConfirmationModal>
     </AdminLayout>
   );
 };

@@ -53,8 +53,8 @@ class GlassesController extends Controller
                     $q->where("name", $collection);
                 });
             });
-
-        return $res->latest()->paginate(10);
+        // send response
+        return response()->json($res->latest()->paginate(10));
     }
 
     public function store(Request $req)
@@ -76,7 +76,7 @@ class GlassesController extends Controller
             "lens_color_id" => ["required", "numeric", "exists:lens_colors,id"],
         ]);
         // generate unique random id
-        $random = $req->input("ref").Str::random(10);
+        $random = $req->input("ref") . Str::random(10);
         $feature = $random . "." . $req->file("feature_image")->extension();
         $model3d = $random . "." . $req->file("model3d")->getClientOriginalExtension();
         try {

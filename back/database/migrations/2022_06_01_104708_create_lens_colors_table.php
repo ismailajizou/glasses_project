@@ -17,6 +17,7 @@ class CreateLensColorsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string("code");
+            $table->softDeletes();
         });    
         DB::table('lens_colors')->insert([
             [ "id"=> 1, "name"=> "blue", "code" => "#0A91F8"],
