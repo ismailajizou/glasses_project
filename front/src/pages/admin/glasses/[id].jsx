@@ -1,4 +1,5 @@
 import Color from "@/components/Color";
+import Button from "@/components/forms/buttons/Button";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import http, { csrf } from "@/helpers/http";
@@ -36,18 +37,8 @@ const GlassesById = ({}) => {
         <div className="flex justify-between">
           <h1 className="text-4xl font-semibold ">Glasses N° {item.ref}</h1>
           <div className="flex">
-            <button
-              onClick={() => to("edit")}
-              className="text-white mr-4 flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
-            >
-              Modify
-            </button>
-            <button
-              onClick={() => openModal()}
-              className="text-white flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
-            >
-              Delete
-            </button>
+            <Button onClick={() => to("edit")} className="mx-4">Modify</Button>
+            <Button variant="danger" onClick={openModal}>Delete</Button>
           </div>
         </div>
         <div>
@@ -115,7 +106,7 @@ const GlassesById = ({}) => {
         title={"Confirmation"}
         onSubmit={deleteItem}
         actionName="Delete"
-        actionColor="danger"
+        variant="danger"
       >
         <p>Are you sure you want to delete this item?</p>
       </ConfirmationModal>

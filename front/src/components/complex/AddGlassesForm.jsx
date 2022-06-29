@@ -7,7 +7,7 @@ import { useState } from "react";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import { GiMirrorMirror } from "react-icons/gi";
 import { useNavigate, useParams } from "react-router-dom";
-import ColorButton from "../forms/ColorButton";
+import ColorButton from "../forms/buttons/ColorButton";
 import CustomOption from "../forms/CustomOption";
 import Error from "../forms/Error";
 import FileInput from "../forms/FileInput";

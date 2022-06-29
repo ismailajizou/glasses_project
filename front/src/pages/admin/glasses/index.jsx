@@ -1,5 +1,10 @@
+import Button from "@/components/forms/buttons/Button";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Pagination from "@/components/pagination/Pagination";
+import Table from "@/components/tables/Table";
+import TBody from "@/components/tables/TBody";
+import TH from "@/components/tables/TH";
+import THead from "@/components/tables/THead";
 import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
@@ -74,26 +79,25 @@ const GlassesPage = ({}) => {
                 className="py-2 px-2 pl-8 w-full text-sm rounded-r-lg border bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
                 placeholder="Search"
               />
-              <button
-                type="submit"
+              <Button
                 onClick={() => {
                   setPageIndex(1);
                   setParams({ page: pageIndex, [queryName]: queryValue });
                 }}
-                className="text-white right-2 bottom-1 focus:ring-4 focus:outline-none font-medium rounded-lg bg-blue-700 text-sm px-4 py-2 mr-2 ml-4"
+                className="mx-4"
               >
                 <HiSearch className="h-4 w-4" />
-              </button>
-              <button
+              </Button>
+              <Button
                 type="reset"
+                variant="danger"
                 onClick={() => {
                   setPageIndex(1);
                   setParams({ page: 1 });
                 }}
-                className="text-white right-2 bottom-1 focus:ring-4 focus:outline-none font-medium rounded-lg bg-red-700 text-sm px-4 py-2 ml-2"
               >
                 <HiX className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
             <p className="text-sm text-gray-700">
               *NOTE: search by price as following min-max
@@ -101,64 +105,43 @@ const GlassesPage = ({}) => {
           </div>
         </div>
         <div className="relative my-2 overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-400">
-            <thead className="text-xs uppercase bg-gray-700 text-gray-400">
+          <Table>
+            <THead>
               <tr>
-                <th scope="col" className="px-6 py-3">
-                  Ref
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Brand
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Collection
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Price
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Actions
-                </th>
+                <TH>Ref</TH>
+                <TH>Brand</TH>
+                <TH>Collection</TH>
+                <TH>Price</TH>
+                <TH>Actions</TH>
               </tr>
-            </thead>
-            <tbody>
-              {data.data.length ? (
-                data.data.map(({ id, ref, brand, collection, price }) => (
-                  <tr key={id} className="border-b bg-gray-800 border-gray-700">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-white whitespace-nowrap"
+            </THead>
+            <TBody empty={!data.data?.length}>
+              {data.data.map(({ id, ref, brand, collection, price }) => (
+                <tr key={id} className="border-b bg-gray-800 border-gray-700">
+                  <TH className={"font-medium text-white whitespace-nowrap"}>
+                    {ref}
+                  </TH>
+                  <td className="px-6 py-4">{brand.name}</td>
+                  <td className="px-6 py-4">{collection.name}</td>
+                  <td className="px-6 py-4">{price} DHs</td>
+                  <td className="px-6 py-4 flex justify-start">
+                    <a
+                      href={`glasses/${id}`}
+                      className="font-medium mr-3 text-blue-500 hover:underline"
                     >
-                      {ref}
-                    </th>
-                    <td className="px-6 py-4">{brand.name}</td>
-                    <td className="px-6 py-4">{collection.name}</td>
-                    <td className="px-6 py-4">{price} DHs</td>
-                    <td className="px-6 py-4 flex justify-start">
-                      <a
-                        href={`glasses/${id}`}
-                        className="font-medium mr-3 text-blue-500 hover:underline"
-                      >
-                        View
-                      </a>
-                      <a
-                        href={`glasses/${id}/edit`}
-                        className="font-medium text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </a>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr className="">
-                  <td colSpan={5} className="text-center text-4xl ">
-                    No Records were found
+                      View
+                    </a>
+                    <a
+                      href={`glasses/${id}/edit`}
+                      className="font-medium text-blue-500 hover:underline"
+                    >
+                      Edit
+                    </a>
                   </td>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              ))}
+            </TBody>
+          </Table>
         </div>
         <Pagination
           from={data.from}

@@ -1,9 +1,14 @@
+import Button from "@/components/forms/buttons/Button";
 import InputField from "@/components/forms/InputField";
 import SubmitButton from "@/components/forms/SubmitButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import Pagination from "@/components/pagination/Pagination";
+import Table from "@/components/tables/Table";
+import TBody from "@/components/tables/TBody";
+import TH from "@/components/tables/TH";
+import THead from "@/components/tables/THead";
 import http, { csrf } from "@/helpers/http";
 import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
@@ -58,13 +63,10 @@ const BrandsPage = () => {
           </h1>
         </div>
         <div className="flex justify-between items-center my-4">
-          <button
-            onClick={() => setIsOpen(true)}
-            className="text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
-          >
+          <Button onClick={() => setIsOpen(true)} variant="primary">
             <AiOutlinePlus className="mr-2" />
             Add
-          </button>
+          </Button>
           <div className="flex justify-end items-center">
             <input
               onChange={(e) => handleShowDeleted(e.target.checked)}
@@ -87,111 +89,82 @@ const BrandsPage = () => {
               className="py-2 px-2 w-56 text-sm rounded-lg border bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
               placeholder="Search"
             />
-            <button
+            <Button
               type="submit"
+              className="mx-4"
+              variant="primary"
+              disabled={!query}
               onClick={() => {
                 setPageIndex(1);
                 setParams({ page: pageIndex, q: query });
               }}
-              className="text-white right-2 bottom-1 focus:ring-4 focus:outline-none font-medium rounded-lg bg-blue-700 text-sm px-4 py-2 mr-2 ml-4"
             >
               <HiSearch className="h-4 w-4" />
-            </button>
-            <button
+            </Button>
+            <Button
               type="reset"
+              variant="danger"
               onClick={() => {
                 setQuery("");
                 setPageIndex(1);
                 setParams({ page: 1 });
               }}
-              className="text-white right-2 bottom-1 focus:ring-4 focus:outline-none font-medium rounded-lg bg-red-700 text-sm px-4 py-2 ml-2"
             >
               <HiX className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
         <div className="relative my-2 overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-400">
-            <thead className="text-xs uppercase bg-gray-700 text-gray-400">
+          <Table>
+            <THead>
               <tr>
-                <th scope="col" className="px-6 py-3">
-                  #ID
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Actions
-                </th>
+                <TH>#ID</TH>
+                <TH>Name</TH>
+                <TH>Status</TH>
+                <TH>Actions</TH>
               </tr>
-            </thead>
-            <tbody>
-              {brands.data?.length ? (
-                brands.data.map(({ id, name, deleted_at }) => (
-                  <tr key={id} className="border-b bg-gray-800 border-gray-700">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-white whitespace-nowrap"
+            </THead>
+            <TBody empty={!brands.data?.length}>
+              {brands.data.map(({ id, name, deleted_at }) => (
+                <tr key={id} className="border-b bg-gray-800 border-gray-700">
+                  <TH className="font-medium text-white whitespace-nowrap">
+                    {id}
+                  </TH>
+                  <td className="px-6 py-4">{name}</td>
+                  <td className="text-center px-6 py-4">
+                    <div
+                      className={`w-3.5 h-3.5 ${
+                        deleted_at ? "bg-red-600" : "bg-green-600"
+                      } rounded-full`}
+                    />
+                  </td>
+                  <td className="px-6 py-4 flex justify-start">
+                    <button
+                      onClick={() =>
+                        setEditModal({ item: { id, name }, isOpen: true })
+                      }
+                      className="font-medium mr-3 text-blue-500 hover:underline"
                     >
-                      {id}
-                    </th>
-                    <td className="px-6 py-4">{name}</td>
-                    <td className="text-center px-6 py-4">
-                      <div
-                        className={`w-3.5 h-3.5 ${
-                          deleted_at ? "bg-red-600" : "bg-green-600"
-                        } rounded-full`}
-                      />
-                    </td>
-                    <td className="px-6 py-4 flex justify-start">
-                      <button
-                        onClick={() =>
-                          setEditModal({ item: { id, name }, isOpen: true })
-                        }
-                        className="font-medium mr-3 text-blue-500 hover:underline"
-                      >
-                        Edit
-                      </button>
-                      {deleted_at ? (
-                        <button
-                          onClick={() =>
-                            setDeleteModal({
-                              item: { id, name, deleted_at },
-                              isOpen: true,
-                            })
-                          }
-                          className="font-medium mr-3 text-green-500 hover:underline"
-                        >
-                          Restore
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() =>
-                            setDeleteModal({
-                              item: { id, name, deleted_at },
-                              isOpen: true,
-                            })
-                          }
-                          className="font-medium mr-3 text-red-500 hover:underline"
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr className="">
-                  <td colSpan={4} className="text-center text-4xl ">
-                    No Records were found
+                      Edit
+                    </button>
+                    <button
+                      onClick={() =>
+                        setDeleteModal({
+                          item: { id, name, deleted_at },
+                          isOpen: true,
+                        })
+                      }
+                      className={`font-medium mr-3 ${
+                        deleted_at ? "text-green-500" : "text-red-500"
+                      } hover:underline`}
+                    >
+                      {deleted_at ? "Restore" : "Delete"}
+                    </button>
                   </td>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              ))}
+            </TBody>
+          </Table>
         </div>
         <Pagination
           from={brands.from}
@@ -275,11 +248,11 @@ const BrandsPage = () => {
         title={"Delete Brand"}
         onSubmit={() => handleDelete(deleteModal.item)}
         actionName={deleteModal.item?.deleted_at ? "Restore" : "Delete"}
-        actionColor={deleteModal.item?.deleted_at ? "success" : "danger"}
+        variant={deleteModal.item?.deleted_at ? "success" : "danger"}
       >
         <p>
-          Are you sure you want to {deleteModal.item?.deleted_at ? "restore" : "delete"} this
-          brand?
+          Are you sure you want to{" "}
+          {deleteModal.item?.deleted_at ? "restore" : "delete"} this brand?
         </p>
       </ConfirmationModal>
     </AdminLayout>

@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { JEELIZVTOWIDGET } from "jeelizvtowidget";
 import Canvas from "@/components/Canvas";
-import ChangeButton from "@/components/ChangeButton";
+import ChangeButton from "@/components/forms/buttons/ChangeButton";
 import { init_VTOWidget } from "@/helpers/initCanvas";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { FaCamera } from "react-icons/fa";
