@@ -4,6 +4,7 @@ import NotFound from "./pages/404";
 import BrandsPage from "./pages/admin/brands";
 import CollectionsPage from "./pages/admin/collections";
 import Dashboard from "./pages/admin/dashboard";
+import FrameColorsPage from "./pages/admin/frames/colors";
 import AddGlassesPage from "./pages/admin/glasses/add";
 import EditPage from "./pages/admin/glasses/edit";
 import GlassesPage from "./pages/admin/glasses/index";
@@ -24,6 +25,10 @@ function App({}) {
         </Route>
         <Route path="brands" element={<BrandsPage />} />
         <Route path="collections" element={<CollectionsPage />} />
+        <Route path="frames">
+          <Route path="colors" element={<FrameColorsPage />} />
+          <Route path="materials" element={<FrameColorsPage />} />
+        </Route>
         <Route path="login" element={<LoginAdmin />} />
       </Route>
       <Route path="*" element={<NotFound />} />

@@ -13,7 +13,7 @@ const InputField = ({ label, tail, ...props }) => {
         <Field
           {...field}
           {...props}
-          className={`border block w-full p-2.5 text-sm ${
+          className={`border block w-full ${props.type === "color" ? "" : "p-2.5"} text-sm ${
             tail ? "rounded-l-lg" : "rounded-lg"
           } ${
             meta.error && meta.touched

@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class LensColor extends Model
 {
     use HasFactory, SoftDeletes;
+    public $timestamps = false;
+    protected $fillable = [
+        "name",
+        "code"
+    ];
 }

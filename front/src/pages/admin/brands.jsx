@@ -226,7 +226,7 @@ const BrandsPage = () => {
               setEditModal({ isOpen: false, item: null });
             } catch (error) {
               console.error(error);
-              if (error.response.data.status === 401)
+              if (error.respons.status === 422)
                 setErrors(error.response.data.errors);
             }
           }}

@@ -26,7 +26,7 @@ const GlassesById = ({}) => {
       mutate("/glasses/" + id);
       to("/admin/glasses");
     } catch (error) {
-      if (error.response.data.status) to("/admin");
+      if (error.response.status) to("/admin");
     }
   };
   if (error) return to("/admin/glasses");

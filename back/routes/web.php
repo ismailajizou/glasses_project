@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{GlassesController, BrandsController, CollectionsController};
+use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,65 +18,37 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
+// administrative routes
+Route::get("/admin/dashboard", [AdminDashboardController::class, "index"])->middleware("auth");
+
 // Glasses routes
-Route::post("/glasses/add", [GlassesController::class, "store"])
-    ->middleware("auth")
-    ->name('glasses.store');
-Route::get("/glasses", [GlassesController::class, "index"])
-    ->name("glasses.index");
-Route::get("/glasses/{id}", [GlassesController::class, "show"])
-    ->name("glasses.show");
-Route::delete("/glasses/{id}", [GlassesController::class, "destroy"])
-    ->middleware("auth")
-    ->name("glasses.destroy");
-Route::post("/glasses/{id}", [GlassesController::class, "edit"])
-    ->middleware("auth")
-    ->name("glasses.edit");
+Route::post("/glasses/add", [GlassesController::class, "store"])->middleware("auth");
+Route::get("/glasses", [GlassesController::class, "index"]);
+Route::get("/glasses/{id}", [GlassesController::class, "show"]);
+Route::delete("/glasses/{id}", [GlassesController::class, "destroy"])->middleware("auth");
+Route::post("/glasses/{id}", [GlassesController::class, "edit"])->middleware("auth");
 
 // Brand routes
-Route::get("/brands", [BrandsController::class, "index"])
-    ->name("brands.index");
-Route::post("/brands/{id}", [BrandsController::class, "edit"])
-    ->middleware("auth")
-    ->name("brands.edit");
-
-Route::post("/brands/add", [BrandsController::class, "store"])
-    ->middleware("auth")
-    ->name('brands.store');
-
-Route::delete("/brands/{id}", [BrandsController::class, "destroy"])
-    ->middleware("auth")
-    ->name("brands.destroy");
-
-Route::post("/brands/{id}/restore", [BrandsController::class, "restore"])
-    ->middleware("auth")
-    ->name("brands.restore");
+Route::get("/brands", [BrandsController::class, "index"]);
+Route::post("/brands/{id}", [BrandsController::class, "edit"])->middleware("auth");
+Route::post("/brands/add", [BrandsController::class, "store"])->middleware("auth");
+Route::delete("/brands/{id}", [BrandsController::class, "destroy"])->middleware("auth");
+Route::post("/brands/{id}/restore", [BrandsController::class, "restore"])->middleware("auth");
 
 // collections routes
-Route::get("/collections", [CollectionsController::class, "index"])
-    ->name("collections.index");
+Route::get("/collections", [CollectionsController::class, "index"]);
+Route::post("/collections/add", [CollectionsController::class, "store"])->middleware("auth");
+Route::get("/collections/{id}", [CollectionsController::class, "show"]);
+Route::post("/collections/{id}", [CollectionsController::class, "edit"])->middleware("auth");
+Route::delete("/collections/{id}", [CollectionsController::class, "destroy"])->middleware("auth");
+Route::post("/collections/{id}/restore", [CollectionsController::class, "restore"])->middleware("auth");
 
-Route::post("/collections/add", [CollectionsController::class, "store"])
-    ->middleware("auth")
-    ->name('collections.store');
-    
-Route::get("/collections/{id}", [CollectionsController::class, "show"])
-    ->name("collections.show");
-
-Route::post("/collections/{id}", [CollectionsController::class, "edit"])
-    ->middleware("auth")
-    ->name("collections.edit");
-
-
-Route::delete("/collections/{id}", [CollectionsController::class, "destroy"])
-    ->middleware("auth")
-    ->name("collections.destroy");
-
-Route::post("/collections/{id}/restore", [CollectionsController::class, "restore"])
-    ->middleware("auth")
-    ->name("collections.restore");
-
-
+// Manipulate frames colors
+Route::get("/frames/colors", [FrameColorController::class, "index"])->middleware("auth");
+Route::post("/frames/colors/add", [FrameColorController::class, "store"])->middleware("auth");
+Route::post("/frames/colors/{id}", [FrameColorController::class, "edit"])->middleware("auth");
+Route::delete("/frames/colors/{id}", [FrameColorController::class, "destroy"])->middleware("auth");
+Route::post("/frames/colors/{id}/restore", [FrameColorController::class, "restore"])->middleware("auth");
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/assets.php';

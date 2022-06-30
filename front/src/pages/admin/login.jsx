@@ -21,7 +21,7 @@ const LoginAdmin = () => {
       >
         {({ isSubmitting, isValid }) => (
           <Form className="min-w-[32rem] border rounded-lg shadow-md m-auto border-slate-300 px-12 py-10 bg-slate-50">
-            <h1 className="text-center text-4xl font-semibold">ADMIN</h1>
+            <h1 className="text-center text-4xl font-semibold uppercase">admin</h1>
             <InputField
               id="email"
               label="E-mail"

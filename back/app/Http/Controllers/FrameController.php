@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 class FrameController extends Controller
 {
     //
-
-
     public static function getAllInfo(){
         $info = [
             "shapes" => FrameShape::all(),

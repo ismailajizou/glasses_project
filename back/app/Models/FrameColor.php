@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class FrameColor extends Model
 {
     use HasFactory, SoftDeletes;
+    public $timestamps = false;
+    protected $fillable = [
+        "name",
+        "code"
+    ];
 }
