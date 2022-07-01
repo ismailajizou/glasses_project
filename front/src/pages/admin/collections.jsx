@@ -10,7 +10,6 @@ import TBody from "@/components/tables/TBody";
 import TH from "@/components/tables/TH";
 import THead from "@/components/tables/THead";
 import http, { csrf } from "@/helpers/http";
-import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
 import { Form, Formik } from "formik";
@@ -21,7 +20,6 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { object, string } from "yup";
 
 const CollectionsPage = () => {
-  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
   const [params, setParams] = useSearchParams();
   const [pageIndex, setPageIndex] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -51,8 +49,20 @@ const CollectionsPage = () => {
       else await http.delete(`/collections/${item.id}`);
       setDeleteModal({ item: null, isOpen: false });
       mutate();
+      showNotification({
+        title: "Success",
+        message: `Collection has been ${
+          item.deleted_at ? "restored" : "deleted"
+        }`,
+        variant: "success",
+      });
     } catch (err) {
       console.error(err);
+      showNotification({
+        title: "Error",
+        message: err.response.data.message,
+        variant: "error",
+      });
     }
   };
 
@@ -196,8 +206,20 @@ const CollectionsPage = () => {
               await http.post("/collections/add", values);
               mutate();
               setIsOpen(false);
+              showNotification({
+                title: "Success",
+                message: `Collection has been added`,
+                variant: "success",
+              });
             } catch (error) {
-              setErrors(error.response.data.errors);
+              if (error.response.status === 422)
+                setErrors(error.response.data.errors);
+              else
+                showNotification({
+                  title: "Error",
+                  message: error.response.data.message,
+                  variant: "error",
+                });
             }
           }}
         >
@@ -232,10 +254,21 @@ const CollectionsPage = () => {
               await http.post(`/collections/${editModal.item.id}`, values);
               mutate();
               setEditModal({ isOpen: false, item: null });
+              showNotification({
+                title: "Success",
+                message: `Collection has been edited`,
+                variant: "success",
+              });
             } catch (error) {
               console.error(error);
               if (error.response.status === 422)
                 setErrors(error.response.data.errors);
+              else
+                showNotification({
+                  title: "Error",
+                  message: error.response.data.message,
+                  variant: "error",
+                });
             }
           }}
         >

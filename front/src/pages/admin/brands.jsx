@@ -10,8 +10,8 @@ import TBody from "@/components/tables/TBody";
 import TH from "@/components/tables/TH";
 import THead from "@/components/tables/THead";
 import http, { csrf } from "@/helpers/http";
-import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
+import { useNotification } from "@/hooks/useNotification";
 import AdminLayout from "@/layouts/AdminLayout";
 import { Form, Formik } from "formik";
 import { useState } from "react";
@@ -21,7 +21,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { object, string } from "yup";
 
 const BrandsPage = () => {
-  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
+  const { showNotification } = useNotification();
   const [params, setParams] = useSearchParams();
   const [pageIndex, setPageIndex] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +30,6 @@ const BrandsPage = () => {
   const [query, setQuery] = useState("");
   const l = useLocation();
   const { data: brands, error, mutate } = useFetch("/brands" + l.search);
-
   const handleShowDeleted = (checked) => {
     if (checked) {
       params.set("deleted", "true");
@@ -47,8 +46,18 @@ const BrandsPage = () => {
       else await http.delete(`/brands/${item.id}`);
       setDeleteModal({ item: null, isOpen: false });
       mutate();
+      showNotification({
+        title: "Success",
+        message: `Brand has been ${item.deleted_at ? "restored" : "deleted"}`,
+        variant: "success",
+      });
     } catch (err) {
       console.error(err);
+      showNotification({
+        title: "Error",
+        message: err.response.data.message,
+        variant: "error",
+      });
     }
   };
 
@@ -192,8 +201,20 @@ const BrandsPage = () => {
               await http.post("/brands/add", values);
               mutate();
               setIsOpen(false);
+              showNotification({
+                title: "Success",
+                message: "Brand added successfully",
+                variant: "success",
+              });
             } catch (error) {
-              setErrors(error.response.data.errors);
+              if (error.response.status === 422)
+                setErrors(error.response.data.errors);
+              else
+                showNotification({
+                  title: "Error",
+                  message: error.response.data.message,
+                  variant: "error",
+                });
             }
           }}
         >
@@ -224,10 +245,20 @@ const BrandsPage = () => {
               await http.post(`/brands/${editModal.item.id}`, values);
               mutate();
               setEditModal({ isOpen: false, item: null });
+              showNotification({
+                title: "Success",
+                message: `Brand has been edited.`,
+                variant: "success",
+              });
             } catch (error) {
-              console.error(error);
-              if (error.respons.status === 422)
+              if (error.response.status === 422)
                 setErrors(error.response.data.errors);
+              else
+                showNotification({
+                  title: "Error",
+                  message: error.response.data.message,
+                  variant: "error",
+                });
             }
           }}
         >

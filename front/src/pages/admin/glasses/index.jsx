@@ -5,21 +5,14 @@ import Table from "@/components/tables/Table";
 import TBody from "@/components/tables/TBody";
 import TH from "@/components/tables/TH";
 import THead from "@/components/tables/THead";
-import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import {
-  HiArrowNarrowLeft,
-  HiArrowNarrowRight,
-  HiSearch,
-  HiX,
-} from "react-icons/hi";
+import { HiSearch, HiX } from "react-icons/hi";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 const GlassesPage = ({}) => {
-  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
   const location = useLocation();
   const [pageIndex, setPageIndex] = useState(1);
   const [params, setParams] = useSearchParams();

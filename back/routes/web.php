@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController};
+use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, LensColorController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +49,14 @@ Route::post("/frames/colors/add", [FrameColorController::class, "store"])->middl
 Route::post("/frames/colors/{id}", [FrameColorController::class, "edit"])->middleware("auth");
 Route::delete("/frames/colors/{id}", [FrameColorController::class, "destroy"])->middleware("auth");
 Route::post("/frames/colors/{id}/restore", [FrameColorController::class, "restore"])->middleware("auth");
+
+// manipulate lens colors
+Route::get("/lens/colors", [LensColorController::class, "index"])->middleware("auth");
+Route::post("/lens/colors/add", [LensColorController::class, "store"])->middleware("auth");
+Route::post("/lens/colors/{id}", [LensColorController::class, "edit"])->middleware("auth");
+Route::delete("/lens/colors/{id}", [LensColorController::class, "destroy"])->middleware("auth");
+Route::post("/lens/colors/{id}/restore", [LensColorController::class, "restore"])->middleware("auth");
+
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/assets.php';

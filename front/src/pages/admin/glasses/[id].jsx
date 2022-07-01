@@ -4,30 +4,38 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import http, { csrf } from "@/helpers/http";
 import { capitalize } from "@/helpers/stringFormatters";
-import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
+import { useNotification } from "@/hooks/useNotification";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const GlassesById = ({}) => {
-  useAuth({ middleware: "auth", redirectIfError: "/admin" });
   const { id } = useParams();
   const { data: item, error, mutate } = useFetch("/glasses/" + id);
   const to = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
-
+  const { showNotification } = useNotification()
   const deleteItem = async () => {
     try {
       await csrf();
       await http.delete("glasses/" + id);
       mutate("/glasses/" + id);
-      to("/admin/glasses");
+      showNotification({
+        variant: "success",
+        title: "Success",
+        message: "Item deleted successfully",
+      });
     } catch (error) {
-      if (error.response.status) to("/admin");
+      showNotification({
+        variant: "error",
+        title: "Error",
+        message: error.response.message,
+      });
     }
+    to("/admin/glasses");
   };
   if (error) return to("/admin/glasses");
   if (!item) return <LoadingSpinner />;

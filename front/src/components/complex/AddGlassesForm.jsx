@@ -1,4 +1,5 @@
 import http, { csrf } from "@/helpers/http";
+import { useNotification } from "@/hooks/useNotification";
 import AdminLayout from "@/layouts/AdminLayout";
 import addGlassesValidator from "@/validators/add-glasses-validator";
 import { Tab } from "@headlessui/react";
@@ -24,8 +25,8 @@ const AddGlassesForm = ({
   edit,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { showNotification } = useNotification();
   const to = useNavigate();
-  // get id from url
   const { id } = useParams();
   const nextTab = () => setSelectedIndex((index) => index + 1);
   const previousTab = () => setSelectedIndex((index) => index - 1);
@@ -60,18 +61,23 @@ const AddGlassesForm = ({
                 headers: { "Content-Type": "multipart/form-data" },
               }
             );
-
-            alert(
-              edit
+            showNotification({
+              title: "Success",
+              message: edit
                 ? `Updated Successfully`
-                : `The glasses with the ref ${values.ref} registered successfully`
-            );
+                : `The glasses with the ref ${values.ref} registered successfully`,
+            });
 
             to("/admin/glasses");
           } catch (e) {
             console.error(e);
-            if (e.response.status === 500) setErrors(e.response.data.errors);
-            alert(e.response.data.message);
+            if (e.response.status === 422) setErrors(e.response.data.errors);
+            else
+              showNotification({
+                title: "Error",
+                message: e.response.data.message,
+                variant: "error",
+              });
           }
           setSubmitting(false);
         }}

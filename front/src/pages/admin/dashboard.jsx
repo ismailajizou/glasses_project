@@ -4,12 +4,13 @@ import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
 import { FaGlasses } from "react-icons/fa";
 import { GiSpectacleLenses, GiSunglasses } from "react-icons/gi";
+import {
+  MdOutlineCollectionsBookmark,
+  MdOutlineVerified,
+} from "react-icons/md";
 import { SiMaterialdesignicons } from "react-icons/si";
-import { MdOutlineCollectionsBookmark, MdOutlineVerified } from "react-icons/md";
-import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = ({}) => {
-  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
   const { data: stats, error } = useFetch("/admin/dashboard");
   if (error) return <div>Error: {error.response.data.message}</div>;
   if (!stats) return <LoadingSpinner />;
