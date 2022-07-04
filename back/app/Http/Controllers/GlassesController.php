@@ -65,7 +65,7 @@ class GlassesController extends Controller
             "price" => ["required", "numeric", "min:1"],
             "gender" => ["required"],
             "feature_image" => ["required", "file", "image", "mimes:png,jpg,jpeg"],
-            "model3d" => ["required", "file", "mimetypes:model/gltf+json,application/octet-stream"],
+            "model3d" => ["required", "file", "mimetypes:application/json"],
             "brand_id" => ["required", "numeric", "exists:brands,id"],
             "collection_id" => ["required", "numeric", "exists:collections,id"],
             "frame_color_id" => ["required", "numeric", "exists:frame_colors,id"],
@@ -114,7 +114,7 @@ class GlassesController extends Controller
             "price" => ["required", "numeric", "min:1"],
             "gender" => ["required"],
             "feature_image" => ["file", "image", "mimes:png,jpg,jpeg"],
-            "model3d" => ["file", "mimetypes:model/gltf+json,application/octet-stream"],
+            "model3d" => ["file", "mimetypes:application/json"],
             "brand_id" => ["required", "numeric", "exists:brands,id"],
             "collection_id" => ["required", "numeric", "exists:collections,id"],
             "frame_color_id" => ["required", "numeric", "exists:frame_colors,id"],
@@ -183,5 +183,12 @@ class GlassesController extends Controller
         ];
 
         return response($res);
+    }
+
+    public function model(Request $req, string $ref)
+    {
+        $glasses = Glasses::where("ref", $ref)->firstOrFail();
+
+        return response()->json($glasses->model3d);
     }
 }

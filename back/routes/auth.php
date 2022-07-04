@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\{
     AuthenticatedSessionController,
     EmailVerificationNotificationController,
@@ -37,3 +38,8 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
+
+// change admin password
+Route::post('/admin/password/change', [AdminController::class, 'changePassword'])
+    ->middleware('auth')
+    ->name('admin.password.change');

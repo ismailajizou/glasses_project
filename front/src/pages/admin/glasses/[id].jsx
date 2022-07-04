@@ -4,6 +4,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import http, { csrf } from "@/helpers/http";
 import { capitalize } from "@/helpers/stringFormatters";
+import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import { useNotification } from "@/hooks/useNotification";
 import AdminLayout from "@/layouts/AdminLayout";
@@ -11,6 +12,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const GlassesById = ({}) => {
+  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
+
   const { id } = useParams();
   const { data: item, error, mutate } = useFetch("/glasses/" + id);
   const to = useNavigate();

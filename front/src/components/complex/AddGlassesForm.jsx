@@ -55,7 +55,7 @@ const AddGlassesForm = ({
           try {
             await csrf();
             await http.post(
-              edit ? `/glasses/${id}/edit` : "/glasses/add",
+              edit ? `/glasses/${id}` : "/glasses/add",
               values,
               {
                 headers: { "Content-Type": "multipart/form-data" },

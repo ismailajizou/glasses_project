@@ -1,9 +1,12 @@
 import AddGlassesForm from "@/components/complex/AddGlassesForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import { useParams } from "react-router-dom";
 
 const EditPage = () => {
+  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
+
   const { id } = useParams()
   const { data, error } =  useFetch("/api/glasses/form/all");
   const { data: initials, error: itemError } =  useFetch("/glasses/" + id);

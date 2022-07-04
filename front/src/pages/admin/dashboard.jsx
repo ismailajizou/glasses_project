@@ -1,5 +1,6 @@
 import StatCard from "@/components/cards/StatCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
 import { FaGlasses } from "react-icons/fa";
@@ -11,6 +12,7 @@ import {
 import { SiMaterialdesignicons } from "react-icons/si";
 
 const Dashboard = ({}) => {
+  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
   const { data: stats, error } = useFetch("/admin/dashboard");
   if (error) return <div>Error: {error.response.data.message}</div>;
   if (!stats) return <LoadingSpinner />;

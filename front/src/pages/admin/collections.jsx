@@ -10,6 +10,7 @@ import TBody from "@/components/tables/TBody";
 import TH from "@/components/tables/TH";
 import THead from "@/components/tables/THead";
 import http, { csrf } from "@/helpers/http";
+import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
 import { Form, Formik } from "formik";
@@ -20,6 +21,8 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { object, string } from "yup";
 
 const CollectionsPage = () => {
+  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
+
   const [params, setParams] = useSearchParams();
   const [pageIndex, setPageIndex] = useState(1);
   const [isOpen, setIsOpen] = useState(false);

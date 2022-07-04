@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, LensColorController};
+use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, FrameMaterialController, LensColorController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,16 +22,17 @@ Route::get('/', function () {
 Route::get("/admin/dashboard", [AdminDashboardController::class, "index"])->middleware("auth");
 
 // Glasses routes
-Route::post("/glasses/add", [GlassesController::class, "store"])->middleware("auth");
 Route::get("/glasses", [GlassesController::class, "index"]);
+Route::post("/glasses/add", [GlassesController::class, "store"])->middleware("auth");
 Route::get("/glasses/{id}", [GlassesController::class, "show"]);
 Route::delete("/glasses/{id}", [GlassesController::class, "destroy"])->middleware("auth");
 Route::post("/glasses/{id}", [GlassesController::class, "edit"])->middleware("auth");
+Route::get("glasses/{ref}/model", [GlassesController::class, "model"]);
 
 // Brand routes
 Route::get("/brands", [BrandsController::class, "index"]);
-Route::post("/brands/{id}", [BrandsController::class, "edit"])->middleware("auth");
 Route::post("/brands/add", [BrandsController::class, "store"])->middleware("auth");
+Route::post("/brands/{id}", [BrandsController::class, "edit"])->middleware("auth");
 Route::delete("/brands/{id}", [BrandsController::class, "destroy"])->middleware("auth");
 Route::post("/brands/{id}/restore", [BrandsController::class, "restore"])->middleware("auth");
 
@@ -56,6 +57,16 @@ Route::post("/lens/colors/add", [LensColorController::class, "store"])->middlewa
 Route::post("/lens/colors/{id}", [LensColorController::class, "edit"])->middleware("auth");
 Route::delete("/lens/colors/{id}", [LensColorController::class, "destroy"])->middleware("auth");
 Route::post("/lens/colors/{id}/restore", [LensColorController::class, "restore"])->middleware("auth");
+
+
+// manipulate frames materials
+Route::get("/frames/materials", [FrameMaterialController::class, "index"])->middleware("auth");
+Route::post("/frames/materials/add", [FrameMaterialController::class, "store"])->middleware("auth");
+Route::post("/frames/materials/{id}", [FrameMaterialController::class, "edit"])->middleware("auth");
+Route::delete("/frames/materials/{id}", [FrameMaterialController::class, "destroy"])->middleware("auth");
+Route::post("/frames/materials/{id}/restore", [FrameMaterialController::class, "restore"])->middleware("auth");
+
+
 
 
 require __DIR__ . '/auth.php';

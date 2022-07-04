@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Glasses;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -7,10 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('features/{filename}', function ($filename)
 {
     $path = storage_path('app/public/features/' . $filename);
-    // Log::error("path: ".$path);
-    // dd($path);
     if (!File::exists($path)) {
-        // dd("hi");
         abort(404);
     }
 
@@ -38,4 +36,5 @@ Route::get('models/{filename}', function ($filename)
 
     return $response;
 });
+
 

@@ -5,6 +5,7 @@ import Table from "@/components/tables/Table";
 import TBody from "@/components/tables/TBody";
 import TH from "@/components/tables/TH";
 import THead from "@/components/tables/THead";
+import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
 import AdminLayout from "@/layouts/AdminLayout";
 import { useState } from "react";
@@ -13,6 +14,8 @@ import { HiSearch, HiX } from "react-icons/hi";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 const GlassesPage = ({}) => {
+  useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
+
   const location = useLocation();
   const [pageIndex, setPageIndex] = useState(1);
   const [params, setParams] = useSearchParams();
@@ -120,15 +123,21 @@ const GlassesPage = ({}) => {
                   <td className="px-6 py-4 flex justify-start">
                     <a
                       href={`glasses/${id}`}
-                      className="font-medium mr-3 text-blue-500 hover:underline"
+                      className="font-medium mr-3 text-blue-300 hover:underline"
                     >
                       View
                     </a>
                     <a
                       href={`glasses/${id}/edit`}
-                      className="font-medium text-blue-500 hover:underline"
+                      className="font-medium mr-3 text-blue-500 hover:underline"
                     >
                       Edit
+                    </a>
+                    <a
+                      href={`try-on/${ref}`}
+                      className="font-medium text-green-500 hover:underline"
+                    >
+                      Try on
                     </a>
                   </td>
                 </tr>

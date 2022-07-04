@@ -1,7 +1,7 @@
 import { JEELIZVTOWIDGET } from "jeelizvtowidget";
 import searchImage from '../assets/images/target.png'
 
-export function init_VTOWidget(placeHolder, canvas, toggleLoading){
+export function init_VTOWidget(placeHolder, canvas, toggleLoading, initialSku){
     JEELIZVTOWIDGET.start({
       placeHolder,
       canvas,
@@ -11,7 +11,7 @@ export function init_VTOWidget(placeHolder, canvas, toggleLoading){
         LOADING_START: toggleLoading.bind(null, true),
         LOADING_END: toggleLoading.bind(null, false)
       },
-      sku: 'empty', // SKU loadded at the beginning
+      // sku: initialSku ?? 'rayban_aviator_or_vertFlash', // SKU loadded at the beginning
       // image displayed when face is not found:
       searchImageMask: searchImage, //'https://appstatic.jeeliz.com/jeewidget/images/target.png',
       searchImageColor: 0xeeeeee, // color of loading (face not found) animation

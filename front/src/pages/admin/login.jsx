@@ -38,7 +38,7 @@ const LoginAdmin = () => {
 
             <div className="flex items-start mb-6">
               <div className="flex items-center h-5">
-                <input
+                <Field
                   id="remember"
                   type="checkbox"
                   name="remember"
