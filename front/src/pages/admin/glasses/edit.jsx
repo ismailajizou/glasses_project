@@ -8,10 +8,9 @@ const EditPage = () => {
   useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
 
   const { id } = useParams()
-  const { data, error } =  useFetch("/api/glasses/form/all");
-  const { data: initials, error: itemError } =  useFetch("/glasses/" + id);
-  if (error || itemError) return <div>failed to load</div>
-  if (!data || !initials) return <LoadingSpinner />
-  return <AddGlassesForm data={data} initialValues={initials} edit/>
+  const { data: initials, error } =  useFetch("/glasses/" + id);
+  if (error) return <div>failed to load</div>
+  if (!initials) return <LoadingSpinner />
+  return <AddGlassesForm initialValues={initials} edit/>
 };
 export default EditPage;

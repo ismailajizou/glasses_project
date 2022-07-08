@@ -43,7 +43,7 @@ const GlassesPage = ({}) => {
     <AdminLayout>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-center text-4xl  font-semibold">
+          <h1 className="text-center text-4xl  font-semibold uppercase">
             LIST OF GLASSES
           </h1>
         </div>
@@ -134,7 +134,7 @@ const GlassesPage = ({}) => {
                       Edit
                     </a>
                     <a
-                      href={`try-on/${ref}`}
+                      href={`/try-on/${ref}`}
                       className="font-medium text-green-500 hover:underline"
                     >
                       Try on

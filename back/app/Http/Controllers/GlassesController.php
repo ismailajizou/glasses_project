@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Glasses, Collection, Brand};
+use App\Http\Requests\GlassesRequest;
+use App\Models\{Glasses, Collection, Brand, Provider, PurchaseLink};
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class GlassesController extends Controller
             "frameColor",
             "frameMaterial",
             "frameShape",
+            "providers",
         ])->findOrFail($id);
     }
 
@@ -31,10 +33,6 @@ class GlassesController extends Controller
         $res = Glasses::with([
             "brand",
             "collection",
-            // "lensColor",
-            // "frameColor",
-            // "frameMaterial",
-            // "frameShape",
         ])
             ->when($req->query("ref"), function ($q, $ref) {
                 return $q->where("ref", $ref);
@@ -57,49 +55,38 @@ class GlassesController extends Controller
         return response()->json($res->latest()->paginate(10));
     }
 
-    public function store(Request $req)
+    public function store(GlassesRequest $req)
     {
-        $req->validate([
-            "ref" => ["required", "unique:glasses,ref"],
-            "description" => ["required"],
-            "price" => ["required", "numeric", "min:1"],
-            "gender" => ["required"],
-            "feature_image" => ["required", "file", "image", "mimes:png,jpg,jpeg"],
-            "model3d" => ["required", "file", "mimetypes:application/json"],
-            "brand_id" => ["required", "numeric", "exists:brands,id"],
-            "collection_id" => ["required", "numeric", "exists:collections,id"],
-            "frame_color_id" => ["required", "numeric", "exists:frame_colors,id"],
-            "frame_type" => ["required", Rule::in(["rimless", "full rim", "half rim"])],
-            "lens_type" => [Rule::in(["", "mirror"])],
-            "frame_shape_id" => ["required", "numeric", "exists:frame_shapes,id"],
-            "frame_material_id" => ["required", "numeric", "exists:frame_materials,id"],
-            "lens_color_id" => ["required", "numeric", "exists:lens_colors,id"],
-        ]);
-        // generate unique random id
-        $random = $req->input("ref") . Str::random(10);
-        $feature = $random . "." . $req->file("feature_image")->extension();
-        $model3d = $random . "." . $req->file("model3d")->getClientOriginalExtension();
+        $values = (object)$req->safe()->all();
+        $random = $values->ref . Str::random(10);
         try {
+            $feature = $random . "." . $values->feature_image->extension();
+            $model3d = $random . "." . $values->model3d->getClientOriginalExtension();
+            $glasses = new Glasses;
+            $glasses->ref = $values->ref;
+            $glasses->description = $values->description;
+            $glasses->title = $values->title;
+            $glasses->price = $values->price;
+            $glasses->price_with_discount = $values->price_with_discount ?? null;
+            $glasses->gender = $values->gender;
+            $glasses->feature_image = $feature;
+            $glasses->model3d = $model3d;
+            $glasses->brand_id = $values->brand_id;
+            $glasses->collection_id = $values->collection_id;
+            $glasses->frame_type = $values->frame_type;
+            $glasses->frame_color_id = $values->frame_color_id;
+            $glasses->frame_shape_id = $values->frame_shape_id;
+            $glasses->frame_material_id = $values->frame_material_id;
+            $glasses->lens_type = $values->lens_type ?? "";
+            $glasses->lens_color_id = $values->lens_color_id;
+            DB::beginTransaction();
+            $glasses->save();
+            $glasses->providers()->attach($values->purchase_links);
+            DB::commit();
             $req->file("feature_image")->storeAs("public/features", $feature);
             $req->file("model3d")->storeAs("public/models", $model3d);
-            $glasses = Glasses::create([
-                "ref" => $req->ref,
-                "description" => $req->description,
-                "price" => $req->price,
-                "gender" => $req->gender,
-                "feature_image" => $feature,
-                "model3d" => $model3d,
-                "brand_id" => $req->brand_id,
-                "collection_id" => $req->collection_id,
-                "lens_type" => $req->lens_type ?? "",
-                "lens_color_id" => $req->lens_color_id,
-                "frame_color_id" => $req->frame_color_id,
-                "frame_type" => $req->frame_type,
-                "frame_shape_id" => $req->frame_shape_id,
-                "frame_material_id" => $req->frame_material_id,
-            ]);
-            $glasses->save();
         } catch (Exception $e) {
+            DB::rollBack();
             return response($e->getMessage(), 500);
         }
         return response()->noContent();
@@ -108,7 +95,6 @@ class GlassesController extends Controller
     {
         $glasses = Glasses::findOrFail($id);
         $req->validate([
-            // validate ref if it is changed
             "ref" => ["required", Rule::unique("glasses", "ref")->ignore($glasses->ref, "ref")],
             "description" => ["required"],
             "price" => ["required", "numeric", "min:1"],
@@ -180,6 +166,7 @@ class GlassesController extends Controller
             "collections" => Collection::all(),
             "lens" => LensController::getAllInfo(),
             "frames" => FrameController::getAllInfo(),
+            "providers" => Provider::all(),
         ];
 
         return response($res);

@@ -2,10 +2,10 @@ import { Field, useField } from "formik";
 import Error from "./Error";
 import Label from "./Label";
 
-const SelectField = ({ label, children, options, ...props }) => {
+const SelectField = ({ label, children, options, className, ...props }) => {
   const [field, meta, helpers] = useField(props);
   return (
-    <div className="my-2">
+    <div className={`my-2 ${className}`}>
       <Label id={props.id} name={field.name}>
         {label}
       </Label>

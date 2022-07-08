@@ -12,6 +12,7 @@ import THead from "@/components/tables/THead";
 import http, { csrf } from "@/helpers/http";
 import { useAuth } from "@/hooks/useAuth";
 import useFetch from "@/hooks/useFetch";
+import { useNotification } from "@/hooks/useNotification";
 import AdminLayout from "@/layouts/AdminLayout";
 import { Form, Formik } from "formik";
 import { useState } from "react";
@@ -22,7 +23,7 @@ import { object, string } from "yup";
 
 const CollectionsPage = () => {
   useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
-
+  const { showNotification } = useNotification()
   const [params, setParams] = useSearchParams();
   const [pageIndex, setPageIndex] = useState(1);
   const [isOpen, setIsOpen] = useState(false);

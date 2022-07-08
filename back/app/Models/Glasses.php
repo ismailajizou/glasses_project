@@ -21,7 +21,7 @@ class Glasses extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        "ref", "description","price",
+        "ref", "description", "title", "price", "price_with_discount",
         "gender",	"feature_image",	
         "model3d",	"brand_id",	"collection_id",	
         "frame_type",	"frame_color_id",	"frame_shape_id",	
@@ -52,5 +52,13 @@ class Glasses extends Model
     public function lensColor()
     {
         return $this->belongsTo(LensColor::class);
+    }
+
+    public function providers()
+    {
+        return $this->belongsToMany(Provider::class, "purchase_links")  
+        ->withPivot(["link"])
+        ->using(PurchaseLink::class)
+        ->as("purchase_link");
     }
 }

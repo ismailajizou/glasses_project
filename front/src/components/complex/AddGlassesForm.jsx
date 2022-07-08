@@ -1,13 +1,20 @@
 import http, { csrf } from "@/helpers/http";
+import useFetch from "@/hooks/useFetch";
 import { useNotification } from "@/hooks/useNotification";
 import AdminLayout from "@/layouts/AdminLayout";
 import addGlassesValidator from "@/validators/add-glasses-validator";
 import { Tab } from "@headlessui/react";
-import { Form, Formik } from "formik";
+import { FieldArray, Form, Formik } from "formik";
 import { useState } from "react";
-import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
+import {
+  BsFillTrashFill,
+  BsGenderFemale,
+  BsGenderMale,
+  BsPlus,
+} from "react-icons/bs";
 import { GiMirrorMirror } from "react-icons/gi";
 import { useNavigate, useParams } from "react-router-dom";
+import Button from "../forms/buttons/Button";
 import ColorButton from "../forms/buttons/ColorButton";
 import CustomOption from "../forms/CustomOption";
 import Error from "../forms/Error";
@@ -18,29 +25,42 @@ import SectionTab from "../forms/SectionTab";
 import SelectField from "../forms/SelectField";
 import SubmitButton from "../forms/SubmitButton";
 import TabControlButton from "../forms/TabControlButton";
+import LoadingSpinner from "../LoadingSpinner";
 
-const AddGlassesForm = ({
-  data: { brands, collections, frames, lens },
-  initialValues: v,
-  edit,
-}) => {
+const AddGlassesForm = ({ initialValues: v, edit }) => {
+  const { data, error } = useFetch("/api/glasses/form/all");
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { showNotification } = useNotification();
   const to = useNavigate();
   const { id } = useParams();
   const nextTab = () => setSelectedIndex((index) => index + 1);
   const previousTab = () => setSelectedIndex((index) => index - 1);
+  if (error) return <div>failed to load: {error.response.data.message}</div>;
+  if (!data) return <LoadingSpinner />;
   return (
     <AdminLayout>
       <Formik
         validationSchema={addGlassesValidator}
         initialValues={{
           ref: edit ? v.ref : "",
+          title: edit ? v.title : "",
           description: edit ? v.description : "",
           price: edit ? v.price : 20,
+          price_with_discount: edit ? v.price_with_discount : 0,
           gender: edit ? v.gender : "male",
           feature_image: undefined,
           model3d: undefined,
+          purchase_links: edit
+            ? [
+                ...v.providers.map(
+                  ({ id: provider_id, purchase_link: { link } }) => ({
+                    provider_id,
+                    link,
+                  })
+                ),
+              ]
+            : [{ provider_id: 0, link: "" }],
           brand_id: edit ? v.brand_id : 0,
           collection_id: edit ? v.collection_id : 0,
           lens_color_id: edit ? v.lens_color_id : 0,
@@ -56,9 +76,14 @@ const AddGlassesForm = ({
             await csrf();
             await http.post(
               edit ? `/glasses/${id}` : "/glasses/add",
-              values,
               {
-                headers: { "Content-Type": "multipart/form-data" },
+                ...values,
+                purchase_links: JSON.stringify(values.purchase_links),
+              },
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
               }
             );
             showNotification({
@@ -75,7 +100,7 @@ const AddGlassesForm = ({
             else
               showNotification({
                 title: "Error",
-                message: e.response.data.message,
+                message: "Something went wrong !",
                 variant: "error",
               });
           }
@@ -100,6 +125,7 @@ const AddGlassesForm = ({
             >
               <Tab.List className="bg-blue-300 rounded-xl max-w-fit mx-auto">
                 <SectionTab>Glasses</SectionTab>
+                <SectionTab>Providers</SectionTab>
                 <SectionTab>Lens</SectionTab>
                 <SectionTab>Frame</SectionTab>
               </Tab.List>
@@ -112,20 +138,36 @@ const AddGlassesForm = ({
                     id="ref"
                   />
                   <InputField
+                    name="title"
+                    label={"Title"}
+                    placeholder="Title to be displayed"
+                    id="title"
+                  />
+                  <InputField
                     name="description"
                     label={"Description"}
                     placeholder="some description ..."
                     as="textarea"
                     id="desc"
                   />
-                  <InputField
-                    label="Price"
-                    name="price"
-                    id="price"
-                    placeholder="Price"
-                    type="number"
-                    tail="DHs"
-                  />
+                  <div className="flex justify-between flex-1">
+                    <InputField
+                      label="Price"
+                      name="price"
+                      id="main_price"
+                      placeholder="Main price"
+                      type="number"
+                      tail="DHs"
+                    />
+                    <InputField
+                      label="Price with discount"
+                      name="price_with_discount"
+                      id="price_with_discount"
+                      placeholder="Price with discount"
+                      type="number"
+                      tail="DHs"
+                    />
+                  </div>
                   <div>
                     <div>
                       <Label id={"gender"} name="gender">
@@ -171,17 +213,68 @@ const AddGlassesForm = ({
                       label="Brand"
                       name="brand_id"
                       id="brand"
-                      options={brands}
+                      options={data.brands}
                     />
 
                     <SelectField
                       label="Collection"
                       name="collection_id"
                       id="collection"
-                      options={collections}
+                      options={data.collections}
                     />
                   </div>
                   <div className="flex justify-end mt-4">
+                    <TabControlButton text={"Next"} controller={nextTab} />
+                  </div>
+                </Tab.Panel>
+                <Tab.Panel>
+                  <FieldArray
+                    name="purchase_links"
+                    render={({ remove, push }) => (
+                      <div>
+                        <Button
+                          type="button"
+                          variant="primary"
+                          onClick={() => push({ provider_id: 0, link: "" })}
+                        >
+                          <BsPlus className="mr-2 w-6 h-6" /> Add
+                        </Button>
+                        {values.purchase_links.map((link, index) => (
+                          <div key={index} className="flex items-center">
+                            <SelectField
+                              className={"mr-4"}
+                              label="Provider"
+                              name={`purchase_links[${index}].provider_id`}
+                              id={`provider-${index}`}
+                              options={data.providers}
+                            />
+                            <InputField
+                              className={"mr-4"}
+                              label="Link"
+                              name={`purchase_links[${index}].link`}
+                              id={`link-${index}`}
+                              placeholder="Link to purchase"
+                            />
+                            {index !== 0 && (
+                              <Button
+                                type="button"
+                                className={"self-end mb-2"}
+                                variant="danger"
+                                onClick={() => remove(index)}
+                              >
+                                <BsFillTrashFill />
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  />
+                  <div className="flex justify-end mt-6">
+                    <TabControlButton
+                      text={"Previous"}
+                      controller={previousTab}
+                    />
                     <TabControlButton text={"Next"} controller={nextTab} />
                   </div>
                 </Tab.Panel>
@@ -208,7 +301,7 @@ const AddGlassesForm = ({
                       <Error name="lens_color_id" />
                     </div>
                     <div className="flex flex-wrap my-4 justify-center">
-                      {lens.colors.map((color) => (
+                      {data.lens.colors.map((color) => (
                         <ColorButton
                           name="lens_color_id"
                           key={color.id}
@@ -254,7 +347,7 @@ const AddGlassesForm = ({
                       <Error name="frame_shape_id" />
                     </div>
                     <div className="flex justify-center flex-wrap">
-                      {frames.shapes.map((shape) => (
+                      {data.frames.shapes.map((shape) => (
                         <CustomOption
                           value={shape.id}
                           key={shape.id}
@@ -278,7 +371,7 @@ const AddGlassesForm = ({
                       <Error name="frame_material_id" />
                     </div>
                     <div className="flex justify-center flex-wrap">
-                      {frames.materials.map((material) => (
+                      {data.frames.materials.map((material) => (
                         <CustomOption
                           id="material_id"
                           value={material.id}
@@ -298,7 +391,7 @@ const AddGlassesForm = ({
                       <Error name="frame_color_id" />
                     </div>
                     <div className="flex flex-wrap my-4 justify-center">
-                      {frames.colors.map((color) => (
+                      {data.frames.colors.map((color) => (
                         <ColorButton
                           key={color.id}
                           name="frame_color_id"

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, FrameMaterialController, LensColorController};
+use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, FrameMaterialController, LensColorController, ProvidersController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,7 +23,7 @@ Route::get("/admin/dashboard", [AdminDashboardController::class, "index"])->midd
 
 // Glasses routes
 Route::get("/glasses", [GlassesController::class, "index"]);
-Route::post("/glasses/add", [GlassesController::class, "store"])->middleware("auth");
+Route::post("/glasses/add", [GlassesController::class, "store"]);//->middleware("auth");
 Route::get("/glasses/{id}", [GlassesController::class, "show"]);
 Route::delete("/glasses/{id}", [GlassesController::class, "destroy"])->middleware("auth");
 Route::post("/glasses/{id}", [GlassesController::class, "edit"])->middleware("auth");
@@ -45,14 +45,14 @@ Route::delete("/collections/{id}", [CollectionsController::class, "destroy"])->m
 Route::post("/collections/{id}/restore", [CollectionsController::class, "restore"])->middleware("auth");
 
 // Manipulate frames colors
-Route::get("/frames/colors", [FrameColorController::class, "index"])->middleware("auth");
+Route::get("/frames/colors", [FrameColorController::class, "index"]);
 Route::post("/frames/colors/add", [FrameColorController::class, "store"])->middleware("auth");
 Route::post("/frames/colors/{id}", [FrameColorController::class, "edit"])->middleware("auth");
 Route::delete("/frames/colors/{id}", [FrameColorController::class, "destroy"])->middleware("auth");
 Route::post("/frames/colors/{id}/restore", [FrameColorController::class, "restore"])->middleware("auth");
 
 // manipulate lens colors
-Route::get("/lens/colors", [LensColorController::class, "index"])->middleware("auth");
+Route::get("/lens/colors", [LensColorController::class, "index"]);
 Route::post("/lens/colors/add", [LensColorController::class, "store"])->middleware("auth");
 Route::post("/lens/colors/{id}", [LensColorController::class, "edit"])->middleware("auth");
 Route::delete("/lens/colors/{id}", [LensColorController::class, "destroy"])->middleware("auth");
@@ -60,13 +60,18 @@ Route::post("/lens/colors/{id}/restore", [LensColorController::class, "restore"]
 
 
 // manipulate frames materials
-Route::get("/frames/materials", [FrameMaterialController::class, "index"])->middleware("auth");
+Route::get("/frames/materials", [FrameMaterialController::class, "index"]);
 Route::post("/frames/materials/add", [FrameMaterialController::class, "store"])->middleware("auth");
 Route::post("/frames/materials/{id}", [FrameMaterialController::class, "edit"])->middleware("auth");
 Route::delete("/frames/materials/{id}", [FrameMaterialController::class, "destroy"])->middleware("auth");
 Route::post("/frames/materials/{id}/restore", [FrameMaterialController::class, "restore"])->middleware("auth");
 
-
+// providers routes
+Route::get("/providers", [ProvidersController::class, "index"]);
+Route::post("/providers/add", [ProvidersController::class, "store"])->middleware("auth");
+Route::post("/providers/{id}", [ProvidersController::class, "edit"])->middleware("auth");
+Route::delete("/providers/{id}", [ProvidersController::class, "destroy"])->middleware("auth");
+Route::post("/providers/{id}/restore", [ProvidersController::class, "restore"])->middleware("auth");
 
 
 require __DIR__ . '/auth.php';

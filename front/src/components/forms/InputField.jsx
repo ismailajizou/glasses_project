@@ -2,10 +2,10 @@ import { ErrorMessage, Field, useField } from "formik";
 import Error from "./Error";
 import Label from "./Label";
 
-const InputField = ({ label, tail, ...props }) => {
+const InputField = ({ label, tail, className, ...props }) => {
   const [field, meta, helpers] = useField(props);
   return (
-    <div className="my-2">
+    <div className={`my-2 ${className}`}>
       <Label id={props.id} name={field.name}>
         {label}
       </Label>
@@ -13,7 +13,7 @@ const InputField = ({ label, tail, ...props }) => {
         <Field
           {...field}
           {...props}
-          className={`border block w-full ${props.type === "color" ? "" : "p-2.5"} text-sm ${
+          className={`border block w-full min-w-[16rem] ${props.type === "color" ? "" : "p-2.5"} text-sm ${
             tail ? "rounded-l-lg" : "rounded-lg"
           } ${
             meta.error && meta.touched

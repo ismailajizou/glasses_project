@@ -5,10 +5,6 @@ import useFetch from "@/hooks/useFetch";
 
 const AddGlassesPage = () => {
   useAuth({ middleware: "auth", redirectIfError: "/admin/login" });
-
-  const { data, error } =  useFetch("/api/glasses/form/all");
-  if (error) return <div>failed to load</div>
-  if (!data) return <LoadingSpinner />
-  return <AddGlassesForm data={data} />
+  return <AddGlassesForm />;
 };
 export default AddGlassesPage;
