@@ -41,7 +41,7 @@ const GlassesPage = ({}) => {
   if (!data) return <LoadingSpinner />;
   return (
     <AdminLayout>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <h1 className="text-center text-4xl  font-semibold uppercase">
             LIST OF GLASSES
@@ -105,6 +105,7 @@ const GlassesPage = ({}) => {
             <THead>
               <tr>
                 <TH>Ref</TH>
+                <TH>Title</TH>
                 <TH>Brand</TH>
                 <TH>Collection</TH>
                 <TH>Price</TH>
@@ -112,11 +113,12 @@ const GlassesPage = ({}) => {
               </tr>
             </THead>
             <TBody empty={!data.data?.length}>
-              {data.data.map(({ id, ref, brand, collection, price }) => (
+              {data.data.map(({ id, ref, brand, collection, price, title }) => (
                 <tr key={id} className="border-b bg-gray-800 border-gray-700">
                   <TH className={"font-medium text-white whitespace-nowrap"}>
                     {ref}
                   </TH>
+                  <td className="px-6 py-4">{title}</td>
                   <td className="px-6 py-4">{brand.name}</td>
                   <td className="px-6 py-4">{collection.name}</td>
                   <td className="px-6 py-4">{price} DHs</td>

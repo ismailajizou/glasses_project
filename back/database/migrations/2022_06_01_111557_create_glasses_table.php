@@ -28,12 +28,10 @@ class CreateGlassesTable extends Migration
             // frame columns
             $table->enum("frame_type", ["full rim", "half rim", "rimless"]);
             $table->foreignId('frame_color_id')->constrained();
-            // $table->foreignId('frame_type_id')->constrained();
             $table->foreignId('frame_shape_id')->constrained();
             $table->foreignId('frame_material_id')->constrained();
             // lens columns
-            $table->enum("lens_type", ["", "mirror"]);
-            // $table->foreignId('lens_type_id')->constrained();
+            $table->enum("lens_type", ["mirror"])->nullable();
             $table->foreignId('lens_color_id')->constrained();
             $table->timestamps();
         });
