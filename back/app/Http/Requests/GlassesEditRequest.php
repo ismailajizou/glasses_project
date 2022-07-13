@@ -22,6 +22,7 @@ class GlassesEditRequest extends FormRequest
     {
         $this->merge([
             'purchase_links' => json_decode($this->purchase_links, true),
+            "price_with_discount" => $this->price_with_discount > 0 ? $this->price_with_discount : null,
         ]);
     }
 

@@ -15,8 +15,8 @@ import {
 import { GiMirrorMirror } from "react-icons/gi";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "../forms/buttons/Button";
-import ColorButton from "../forms/buttons/ColorButton";
-import CustomOption from "../forms/CustomOption";
+import ColorField from "../forms/buttons/ColorField";
+import CheckBoxField from "../forms/CheckBoxField";
 import Error from "../forms/Error";
 import FileInput from "../forms/FileInput";
 import InputField from "../forms/InputField";
@@ -176,18 +176,18 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                       <Error name="gender" />
                     </div>
                     <div className="flex justify-evenly">
-                      <CustomOption
+                      <CheckBoxField
                         name="gender"
                         value="male"
                         checked={values.gender === "male"}
                       >
                         <BsGenderMale />
                         Male
-                      </CustomOption>
-                      <CustomOption name="gender" value="female">
+                      </CheckBoxField>
+                      <CheckBoxField name="gender" value="female">
                         <BsGenderFemale />
                         Female
-                      </CustomOption>
+                      </CheckBoxField>
                     </div>
                   </div>
                   <div className="flex justify-between mt-3">
@@ -287,10 +287,10 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                       <Error name="lens_type" />
                     </div>
                     <div className="flex justify-center">
-                      <CustomOption name="lens_type" value="mirror" toggle>
+                      <CheckBoxField name="lens_type" value="mirror" toggle>
                         <GiMirrorMirror />
                         Mirror
-                      </CustomOption>
+                      </CheckBoxField>
                     </div>
                   </div>
                   <div className="mt-4">
@@ -302,7 +302,7 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                     </div>
                     <div className="flex flex-wrap my-4 justify-center">
                       {data.lens.colors.map((color) => (
-                        <ColorButton
+                        <ColorField
                           name="lens_color_id"
                           key={color.id}
                           color={color}
@@ -328,14 +328,14 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                     </div>
                     <div className="flex justify-center">
                       {["full rim", "half rim", "rimless"].map((type, id) => (
-                        <CustomOption value={type} key={id} name="frame_type">
+                        <CheckBoxField value={type} key={id} name="frame_type">
                           <img
                             src={`/src/assets/frame_types/${type}.png`}
                             alt="type"
                             className="w-10"
                           />
                           {type.toUpperCase()}
-                        </CustomOption>
+                        </CheckBoxField>
                       ))}
                     </div>
                   </div>
@@ -348,7 +348,7 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                     </div>
                     <div className="flex justify-center flex-wrap">
                       {data.frames.shapes.map((shape) => (
-                        <CustomOption
+                        <CheckBoxField
                           value={shape.id}
                           key={shape.id}
                           name="frame_shape_id"
@@ -359,7 +359,7 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                             className="w-10"
                           />
                           {shape.name.toUpperCase()}
-                        </CustomOption>
+                        </CheckBoxField>
                       ))}
                     </div>
                   </div>
@@ -372,14 +372,14 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                     </div>
                     <div className="flex justify-center flex-wrap">
                       {data.frames.materials.map((material) => (
-                        <CustomOption
+                        <CheckBoxField
                           id="material_id"
                           value={material.id}
                           key={material.id}
                           name="frame_material_id"
                         >
                           {material.name.toUpperCase()}
-                        </CustomOption>
+                        </CheckBoxField>
                       ))}
                     </div>
                   </div>
@@ -392,7 +392,7 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                     </div>
                     <div className="flex flex-wrap my-4 justify-center">
                       {data.frames.colors.map((color) => (
-                        <ColorButton
+                        <ColorField
                           key={color.id}
                           name="frame_color_id"
                           color={color}

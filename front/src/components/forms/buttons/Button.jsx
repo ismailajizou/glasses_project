@@ -3,6 +3,7 @@ const COLORS = {
   success: "bg-green-600 enabled:hover:bg-green-700 focus-visible:ring-green-500",
   danger: "bg-red-600 enabled:hover:bg-red-700 focus-visible:ring-red-500",
   warning: "bg-yellow-600 enabled:hover:bg-yellow-700 focus-visible:ring-yellow-500",
+  secondary: "bg-gray-600 enabled:hover:bg-gray-700 focus-visible:ring-gray-500",
 };
 
 const Button = ({ variant = "primary", children, className, ...props }) => {

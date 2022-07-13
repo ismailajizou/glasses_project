@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, FrameMaterialController, LensColorController, ProvidersController};
+use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, FrameMaterialController, HomeController, LensColorController, ProvidersController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return ['Laravel' => app()->version()];
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
 
 // administrative routes
 Route::get("/admin/dashboard", [AdminDashboardController::class, "index"])->middleware("auth");

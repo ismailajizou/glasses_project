@@ -33,6 +33,11 @@ class GlassesController extends Controller
         $res = Glasses::with([
             "brand",
             "collection",
+            "lensColor",
+            "frameColor",
+            "frameMaterial",
+            "frameShape",
+            "providers",
         ])
             ->when($req->query("ref"), function ($q, $ref) {
                 return $q->where("ref", $ref);

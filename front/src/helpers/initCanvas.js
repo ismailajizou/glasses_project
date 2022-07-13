@@ -1,7 +1,7 @@
 import { JEELIZVTOWIDGET } from "jeelizvtowidget";
 import searchImage from '../assets/images/target.png'
 
-export function init_VTOWidget(placeHolder, canvas, toggleLoading, initialSku){
+export function init_VTOWidget(placeHolder, canvas, toggleLoading){
     JEELIZVTOWIDGET.start({
       placeHolder,
       canvas,

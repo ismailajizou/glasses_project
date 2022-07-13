@@ -17,7 +17,7 @@ class GlassesStoreRequest extends FormRequest
     {
         $this->merge([
             'purchase_links' => json_decode($this->purchase_links, true),
-            'lens_type' => $this->lens_type ?? ""
+            "price_with_discount" => $this->price_with_discount > 0 ? $this->price_with_discount : null,
         ]);
     }
 

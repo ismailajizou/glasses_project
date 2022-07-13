@@ -9,3 +9,11 @@
 .file-input {
   @apply block text-sm text-gray-900 border  rounded-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold;
 }
+
+/* select slider thumb from range slider in mozilla and webkit */ 
+input[type="range"]::-webkit-slider-thumb  {
+  @apply appearance-none bg-green-600 pointer-events-auto shadow-sm h-4 w-4 rounded-full cursor-pointer;
+}
+input[type="range"]::-moz-slider-thumb  {
+  @apply appearance-none bg-green-600 pointer-events-auto shadow-sm h-4 w-4 rounded-full cursor-pointer;
+}

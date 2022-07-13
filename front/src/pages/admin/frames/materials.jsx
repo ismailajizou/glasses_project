@@ -78,7 +78,7 @@ const MaterialsPage = () => {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-center text-4xl  font-semibold">
-            LIST OF BRANDS
+            LIST OF FRAME MATERIALS
           </h1>
         </div>
         <div className="flex justify-between items-center my-4">

@@ -118,7 +118,7 @@ const GlassesPage = ({}) => {
                   <TH className={"font-medium text-white whitespace-nowrap"}>
                     {ref}
                   </TH>
-                  <td className="px-6 py-4">{title}</td>
+                  <td className="px-6 py-4 overflow-x-clip">{title}</td>
                   <td className="px-6 py-4">{brand.name}</td>
                   <td className="px-6 py-4">{collection.name}</td>
                   <td className="px-6 py-4">{price} DHs</td>
