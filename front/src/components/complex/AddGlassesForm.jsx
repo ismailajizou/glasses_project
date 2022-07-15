@@ -201,7 +201,7 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                     />
                     <FileInput
                       label="3D glasses model"
-                      description="A 3D model of the glasses (.glb)"
+                      description="A 3D model of the glasses (.json)"
                       id="model"
                       name="model3d"
                       setFieldValue={setFieldValue}

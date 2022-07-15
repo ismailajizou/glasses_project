@@ -2,9 +2,8 @@ import Canvas from "@/components/Canvas";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import http from "@/helpers/http";
 import { init_VTOWidget } from "@/helpers/initCanvas";
-import useFetch from "@/hooks/useFetch";
 import { JEELIZVTOWIDGET } from "jeelizvtowidget";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const TryOnPage = ({}) => {

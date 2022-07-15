@@ -15,7 +15,7 @@ export default function addGlassesValidator() {
     title: yup.string().required(),
     description: yup.string().required(),
     price: yup.number().required().positive(),
-    price: yup.number().optional(),
+    price_with_discount: yup.number().optional(),
     gender: yup.string().oneOf(["male", "female"], "invalid gender"),
     brand_id: yup.number().required().positive(),
     collection_id: yup.number().required().positive(),

@@ -105,11 +105,22 @@ Route::post('screenshot/', function (Request $req)
     
     $screenshot = request()->input('screenshot');    
     // convert screenshot from base64 to png
-    $screenshot = Image::make($screenshot)->encode('png');
-    $path = storage_path('app/public/screenshots/' . Random::generate(15) . '.png');
-    $screenshot->save($path);
-    return response()->json(['success' => 'Screenshot uploaded successfully.']);
-    
+    try{
+        $screenshot = Image::make($screenshot)->encode('png');
+        // generate a random filename
+        $filename = Random::generate(15) . '.png';
+        // save screenshot to public/screenshots folder
+        $path = storage_path('app/public/screenshots/' . $filename);
+        if (!File::exists(storage_path('app/public/screenshots'))) {
+            File::makeDirectory(storage_path('app/public/screenshots'), 0777, true, true);
+        }
+        $screenshot->save($path, 100, "png");
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error uploading screenshot.']);
+    }
+
+// return the url of the uploaded screenshot
+    return response()->json(['success' => 'Screenshot uploaded successfully.', 'name' => $filename]);    
 });
 
 // get screenshot

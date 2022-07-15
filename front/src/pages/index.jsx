@@ -4,28 +4,37 @@ import ChangeButton from "@/components/forms/buttons/ChangeButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import Snapshot from "@/components/Snapshot";
+import http from "@/helpers/http";
 import { init_VTOWidget } from "@/helpers/initCanvas";
 import useFetch from "@/hooks/useFetch";
+import { usePersistedState } from "@/hooks/usePersistedState";
 import { JEELIZVTOWIDGET } from "jeelizvtowidget";
 import { useEffect, useRef, useState } from "react";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaFacebookF, FaLink, FaWhatsapp } from "react-icons/fa";
 import { HiCheck, HiPause, HiPlay } from "react-icons/hi";
 import { IoIosPricetags } from "react-icons/io";
+import { SiGmail } from "react-icons/si";
 import { useLocation, useSearchParams } from "react-router-dom";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  WhatsappShareButton
+} from "react-share";
 
 const HomePage = ({}) => {
   const [params, setParams] = useSearchParams();
   const l = useLocation();
   const { data: glasses, error } = useFetch("/" + l.search);
+  const [shareModal, setShareModal] = useState({ src: "", isOpen: false });
   const refPlaceHolder = useRef();
   const refCanvas = useRef();
   const refLoading = useRef();
   const [selectedGlasses, setSelectedGlasses] = useState(null);
   const [adjustMode, setAdjustMode] = useState(false);
-  const [images, setImages] = useState([]);
-  // const [logo, setLogo] = useState(null);
+  const [images, setImages] = usePersistedState("images", []);
   const [recordOn, setRecordOn] = useState(true);
   const [priceModal, setPriceModal] = useState({ item: null, isOpen: false });
+  const [copied, setCopied] = useState(false);
 
   const toggleLoading = (isLoadingVisible) => {
     refLoading.current.style.display = isLoadingVisible ? "block" : "none";
@@ -49,11 +58,18 @@ const HomePage = ({}) => {
   };
 
   const takeScreenshot = () => {
-    JEELIZVTOWIDGET.capture_image(15, function (image) {
-      setImages([
-        ...images,
-        { src: image.toDataURL("base64"), id: Date.now() },
-      ]);
+    JEELIZVTOWIDGET.capture_image(15, async function (image) {
+      try {
+        const { data } = await http.post("/screenshot", {
+          screenshot: image.toDataURL("base64"),
+        });
+        setImages((images) => [
+          ...images,
+          `${import.meta.env.VITE_API_URL}/screenshot/${data.name}`,
+        ]);
+      } catch (e) {
+        console.error(e);
+      }
     });
   };
 
@@ -62,10 +78,10 @@ const HomePage = ({}) => {
     const final = current + 5;
     const last = final > links.length ? links.length - 1 : final;
     return [current, last];
-  }
+  };
 
   useEffect(() => {
-    if (error) alert(error.response.data.message);
+    if (error) alert(error);
     if (!glasses) toggleLoading(true);
     if (glasses) toggleLoading(false);
   }, [glasses, error]);
@@ -83,7 +99,12 @@ const HomePage = ({}) => {
     <main className="flex flex-col h-screen">
       <nav className="h-12 bg-gray-800">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 h-full">
-          <h1 className="text-white font-bold text-xl">Jeeliz VTO</h1>
+          {/* <h1 className="text-white font-bold text-xl">Jeeliz VTO</h1> */}
+          <img
+            src={`${import.meta.env.VITE_API_URL}/logo.png`}
+            alt="logo"
+            className="h-10"
+          />
           <FilterGlassesPopover />
         </div>
       </nav>
@@ -135,7 +156,9 @@ const HomePage = ({}) => {
               .map((link, i) => (
                 <button
                   key={i}
-                  onClick={() => setParams({ page: Number.parseInt(link.label) })}
+                  onClick={() =>
+                    setParams({ page: Number.parseInt(link.label) })
+                  }
                   className="font-semibold rounded-full border mx-1 w-10 h-10 hover:underline"
                 >
                   {link.label}
@@ -210,17 +233,17 @@ const HomePage = ({}) => {
         <div className="h-full border-2 bg-gray-100 border-y-2 border-l-2 rounded-l-lg shadow">
           <div className="h-full overflow-y-auto">
             {images.length ? (
-              images.map((item) => (
+              images.map((src, idx) => (
                 <Snapshot
-                  key={item.id}
-                  item={item}
+                  key={idx}
+                  src={src}
                   images={images}
+                  share={() => setShareModal({ isOpen: true, src })}
                   setImages={setImages}
-                  send={() => console.log("hi")}
                 />
               ))
             ) : (
-              <Snapshot item={null} />
+              <Snapshot src={null} />
             )}
           </div>
         </div>
@@ -283,6 +306,55 @@ const HomePage = ({}) => {
           </a>
         </div>
       </div>
+      <ModalWrapper
+        closeModal={() => setShareModal({ src: "", isOpen: false })}
+        isOpen={shareModal.isOpen}
+        title="Share this image"
+      >
+        {shareModal.src && (
+          <>
+            <div className="h-60 w-60 mb-4 mx-auto">
+              <img
+                src={shareModal.src}
+                alt="snapshot"
+                className="w-full h-full"
+              />
+            </div>
+            <div className="flex flex-wrap justify-center items-center">
+            <FacebookShareButton url={shareModal.src}>
+              <button className="m-4 bg-blue-800 hover:bg-blue-700 flex items-center px-4 py-2 rounded font-medium">
+                <FaFacebookF className="text-white w-4 h-4" />
+                <span className="text-white ml-2">Share</span>
+              </button>
+            </FacebookShareButton>
+            <WhatsappShareButton url={shareModal.src}>
+              <button className="m-4 bg-green-600 hover:bg-green-500 flex items-center px-4 py-2 rounded font-medium">
+                <FaWhatsapp className="text-white w-4 h-4" />
+                <span className="text-white ml-2">Whatsapp</span>
+              </button>
+            </WhatsappShareButton>
+            <EmailShareButton url={shareModal.src}>
+              <button className="m-4 bg-red-600 hover:bg-red-500 flex items-center px-4 py-2 rounded font-medium">
+                <SiGmail className="text-white w-4 h-4" />
+                <span className="text-white ml-2">Email</span>
+              </button>
+            </EmailShareButton>
+            <button 
+            onClick={() => {
+              navigator.clipboard.writeText(shareModal.src);
+              setCopied(true);
+              setTimeout(() => {
+                setCopied(false);
+              }, 2000);
+            }}
+              className="m-4 bg-yellow-500 hover:bg-yellow-400 flex items-center px-4 py-2 rounded font-medium">
+                <FaLink className="text-white w-4 h-4" />
+                <span className="text-white ml-2">{copied ? "Copied" : "Copy link"}</span>
+              </button>
+            </div>
+          </>
+        )}
+      </ModalWrapper>
       <LoadingSpinner ref={refLoading} />
     </main>
   );
