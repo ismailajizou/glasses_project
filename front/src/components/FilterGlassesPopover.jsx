@@ -56,15 +56,26 @@ const FilterGlassesPopover = () => {
                   ) : (
                     <Formik
                       initialValues={{
-                        gender: searchParams.get('gender') ?? '',
-                        brand_id: searchParams.get('brand_id')?.split(",") ?? [],
-                        collection_id: searchParams.get('collection_id')?.split(",") ?? [],
-                        price: { min: searchParams.get('price')?.split(",")[0] ?? 20, max: searchParams.get('price')?.split(",")[1] ?? 1000 },
-                        lens_color_id: searchParams.get('lens_color_id')?.split(",") ?? [],
-                        frame_color_id: searchParams.get('frame_color_id')?.split(",") ?? [],
-                        frame_material_id: searchParams.get('frame_material_id')?.split(",") ??[],
-                        frame_shape_id: searchParams.get('frame_shape_id')?.split(",") ??[],
-                        frame_type: searchParams.get('frame_type')?.split(",") ?? [],
+                        gender: searchParams.get("gender") ?? "",
+                        brand_id:
+                          searchParams.get("brand_id")?.split(",") ?? [],
+                        collection_id:
+                          searchParams.get("collection_id")?.split(",") ?? [],
+                        price: {
+                          min: searchParams.get("price")?.split(",")[0] ?? 20,
+                          max: searchParams.get("price")?.split(",")[1] ?? 1000,
+                        },
+                        lens_color_id:
+                          searchParams.get("lens_color_id")?.split(",") ?? [],
+                        frame_color_id:
+                          searchParams.get("frame_color_id")?.split(",") ?? [],
+                        frame_material_id:
+                          searchParams.get("frame_material_id")?.split(",") ??
+                          [],
+                        frame_shape_id:
+                          searchParams.get("frame_shape_id")?.split(",") ?? [],
+                        frame_type:
+                          searchParams.get("frame_type")?.split(",") ?? [],
                       }}
                       onSubmit={(values, { setSubmitting }) => {
                         const { price, gender, ...rest } = values;
@@ -242,6 +253,10 @@ const FilterGlassesPopover = () => {
                                               )
                                             }
                                           >
+                                            <img
+                                              src={`/frame_types/${type}.png`}
+                                              className="w-10"
+                                            />
                                             {type}
                                           </CheckBox>
                                         )
@@ -273,7 +288,7 @@ const FilterGlassesPopover = () => {
                                           }
                                         >
                                           <img
-                                            src={`/src/assets/frame_shapes/${shape.name}.png`}
+                                            src={`/frame_shapes/${shape.name}.png`}
                                             className="w-10"
                                           />
                                           {shape.name}

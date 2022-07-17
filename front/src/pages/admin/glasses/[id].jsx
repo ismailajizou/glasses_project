@@ -3,6 +3,7 @@ import Button from "@/components/forms/buttons/Button";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ConfirmationModal from "@/components/modals/ConfirmationModal";
 import ModalWrapper from "@/components/modals/ModalWrapper";
+import { API_URL } from "@/CONSTANT";
 import http, { csrf } from "@/helpers/http";
 import { title } from "@/helpers/stringFormatters";
 import { useAuth } from "@/hooks/useAuth";
@@ -64,7 +65,7 @@ const GlassesById = ({}) => {
           <div className="relative max-w-xs overflow-hidden flex justify-center items-center">
             <div className="rounded-lg p-2 overflow-hidden">
               <img
-                src={`${import.meta.env.VITE_API_URL}/features/${
+                src={`${API_URL}/features/${
                   item.feature_image
                 }`}
                 height="auto"

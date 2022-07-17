@@ -1,5 +1,6 @@
 import Canvas from "@/components/Canvas";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { API_URL } from "@/CONSTANT";
 import http from "@/helpers/http";
 import { init_VTOWidget } from "@/helpers/initCanvas";
 import { JEELIZVTOWIDGET } from "jeelizvtowidget";
@@ -37,7 +38,7 @@ const TryOnPage = ({}) => {
             const { data } = await http.get(`/glasses/${ref}/model`);	
             // setModel(data);
             JEELIZVTOWIDGET.load_modelStandalone(
-                `${import.meta.env.VITE_API_URL}/models/${data}`
+                `${API_URL}/models/${data}`
               );
         }catch(e){
             if(e.response.status === 404){

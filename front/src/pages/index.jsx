@@ -4,6 +4,7 @@ import ChangeButton from "@/components/forms/buttons/ChangeButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import Snapshot from "@/components/Snapshot";
+import { API_URL } from "@/CONSTANT";
 import http from "@/helpers/http";
 import { init_VTOWidget } from "@/helpers/initCanvas";
 import useFetch from "@/hooks/useFetch";
@@ -53,7 +54,7 @@ const HomePage = ({}) => {
   const onGlassesSelect = (model) => {
     setSelectedGlasses(model);
     JEELIZVTOWIDGET.load_modelStandalone(
-      `${import.meta.env.VITE_API_URL}/models/${model}`
+      `${API_URL}/models/${model}`
     );
   };
 
@@ -65,7 +66,7 @@ const HomePage = ({}) => {
         });
         setImages((images) => [
           ...images,
-          `${import.meta.env.VITE_API_URL}/screenshot/${data.name}`,
+          `${API_URL}/screenshot/${data.name}`,
         ]);
       } catch (e) {
         console.error(e);
@@ -101,7 +102,7 @@ const HomePage = ({}) => {
         <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 h-full">
           {/* <h1 className="text-white font-bold text-xl">Jeeliz VTO</h1> */}
           <img
-            src={`${import.meta.env.VITE_API_URL}/logo.png`}
+            src={`${API_URL}/logo.png`}
             alt="logo"
             className="h-10"
           />
@@ -119,7 +120,7 @@ const HomePage = ({}) => {
                   className={`relative w-24 m-2 h-full`}
                 >
                   <img
-                    src={`${import.meta.env.VITE_API_URL}/features/${
+                    src={`${API_URL}/features/${
                       item.feature_image
                     }`}
                     alt="feature"
@@ -255,7 +256,7 @@ const HomePage = ({}) => {
           >
             <div className="relative w-52 my-2 mx-auto h-full shadow">
               <img
-                src={`${import.meta.env.VITE_API_URL}/features/${
+                src={`${API_URL}/features/${
                   priceModal.item.feature_image
                 }`}
                 alt="feature"
@@ -321,35 +322,38 @@ const HomePage = ({}) => {
               />
             </div>
             <div className="flex flex-wrap justify-center items-center">
-            <FacebookShareButton url={shareModal.src}>
-              <button className="m-4 bg-blue-800 hover:bg-blue-700 flex items-center px-4 py-2 rounded font-medium">
-                <FaFacebookF className="text-white w-4 h-4" />
-                <span className="text-white ml-2">Share</span>
-              </button>
-            </FacebookShareButton>
-            <WhatsappShareButton url={shareModal.src}>
-              <button className="m-4 bg-green-600 hover:bg-green-500 flex items-center px-4 py-2 rounded font-medium">
-                <FaWhatsapp className="text-white w-4 h-4" />
-                <span className="text-white ml-2">Whatsapp</span>
-              </button>
-            </WhatsappShareButton>
-            <EmailShareButton url={shareModal.src}>
-              <button className="m-4 bg-red-600 hover:bg-red-500 flex items-center px-4 py-2 rounded font-medium">
-                <SiGmail className="text-white w-4 h-4" />
-                <span className="text-white ml-2">Email</span>
-              </button>
-            </EmailShareButton>
-            <button 
-            onClick={() => {
-              navigator.clipboard.writeText(shareModal.src);
-              setCopied(true);
-              setTimeout(() => {
-                setCopied(false);
-              }, 2000);
-            }}
-              className="m-4 bg-yellow-500 hover:bg-yellow-400 flex items-center px-4 py-2 rounded font-medium">
+              <FacebookShareButton url={shareModal.src}>
+                <button className="m-4 bg-blue-800 hover:bg-blue-700 flex items-center px-4 py-2 rounded font-medium">
+                  <FaFacebookF className="text-white w-4 h-4" />
+                  <span className="text-white ml-2">Share</span>
+                </button>
+              </FacebookShareButton>
+              <WhatsappShareButton url={shareModal.src}>
+                <button className="m-4 bg-green-600 hover:bg-green-500 flex items-center px-4 py-2 rounded font-medium">
+                  <FaWhatsapp className="text-white w-4 h-4" />
+                  <span className="text-white ml-2">Whatsapp</span>
+                </button>
+              </WhatsappShareButton>
+              <EmailShareButton url={shareModal.src}>
+                <button className="m-4 bg-red-600 hover:bg-red-500 flex items-center px-4 py-2 rounded font-medium">
+                  <SiGmail className="text-white w-4 h-4" />
+                  <span className="text-white ml-2">Email</span>
+                </button>
+              </EmailShareButton>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(shareModal.src);
+                  setCopied(true);
+                  setTimeout(() => {
+                    setCopied(false);
+                  }, 2000);
+                }}
+                className="m-4 bg-yellow-500 hover:bg-yellow-400 flex items-center px-4 py-2 rounded font-medium"
+              >
                 <FaLink className="text-white w-4 h-4" />
-                <span className="text-white ml-2">{copied ? "Copied" : "Copy link"}</span>
+                <span className="text-white ml-2">
+                  {copied ? "Copied" : "Copy link"}
+                </span>
               </button>
             </div>
           </>

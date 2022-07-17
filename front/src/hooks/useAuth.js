@@ -16,21 +16,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, redirectIfError =
             to('/verify-email');
         }
     })
-
-    // const register = async ({ setErrors, values })=> {
-    //     await csrf()
-    //     setErrors({})
-    //     try{
-    //         await http.post('/register', values);
-    //         mutate()
-    //     } catch(err: any) {
-    //         if (err.response.status !== 422) throw err
-    //         setErrors(err.response.data.errors);
-    //     }
-    // }
-
     const login = async ({ setErrors, setStatus, values }) => {
         await csrf()
+        setErrors({})
         setStatus?.(null)
         try {
             await http.post('/login', values);
@@ -41,44 +29,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, redirectIfError =
         }
     }
 
-    // const forgotPassword = async ({ setErrors, setStatus, values }) => {
-    //     await csrf()
-    //     setErrors({})
-    //     setStatus(null)
-    //     try {
-    //         const {data} = await http.post('/forgot-password', values);
-    //         setStatus(data.status)
-    //     } catch (err) {
-    //         if (err.response.status !== 422) throw err
-    //         setErrors(err.response.data.errors)
-    //     }
-    // }
-
-    // const resetPassword = async ({ setErrors, setStatus, values }) => {
-    //     await csrf()
-    //     setErrors({})
-    //     setStatus(null)
-    //     try {
-    //         const { data } = await http.post('/reset-password', { token: router.query.token, ...values });
-    //          router.push('/login?reset=' + Buffer.from(data.status, "binary").toString("base64"));
-    //     } catch (err) {
-    //         if (err.response.status != 422) throw err;
-    //         setErrors(err.response.data.errors)   
-    //     }
-    // }
-
-    // const resendEmailVerification = async ({ setStatus }) => {
-    //     try {
-    //         const { data } = await http.post('/email/verification-notification')
-    //         setStatus(data.status);
-    //     } catch (err) {
-    //         console.error(err.response.data.errors);
-    //     }
-    // }
-
     const logout = async () => {
         if (! error) {
             try{
+                await csrf()
                 await http.post('/logout');
                 mutate();
             } catch(err) {} 
@@ -93,11 +47,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, redirectIfError =
 
     return {
         user,
-        // register,
         login,
-        // forgotPassword,
-        // resetPassword,
-        // resendEmailVerification,
         logout,
     }
 }

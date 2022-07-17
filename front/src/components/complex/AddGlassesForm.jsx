@@ -72,7 +72,7 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
         }}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
           setErrors({});
-          try {
+          try {            
             await csrf();
             await http.post(
               edit ? `/glasses/${id}` : "/glasses/add",
@@ -330,7 +330,8 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                       {["full rim", "half rim", "rimless"].map((type, id) => (
                         <CheckBoxField value={type} key={id} name="frame_type">
                           <img
-                            src={`/src/assets/frame_types/${type}.png`}
+                          
+                            src={`/frame_types/${type}.png`}
                             alt="type"
                             className="w-10"
                           />
@@ -354,7 +355,7 @@ const AddGlassesForm = ({ initialValues: v, edit }) => {
                           name="frame_shape_id"
                         >
                           <img
-                            src={`/src/assets/frame_shapes/${shape.name}.png`}
+                            src={`/frame_shapes/${shape.name}.png`}
                             alt="type"
                             className="w-10"
                           />
