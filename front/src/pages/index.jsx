@@ -11,16 +11,26 @@ import useFetch from "@/hooks/useFetch";
 import { usePersistedState } from "@/hooks/usePersistedState";
 import { JEELIZVTOWIDGET } from "jeelizvtowidget";
 import { useEffect, useRef, useState } from "react";
-import { FaCamera, FaFacebookF, FaLink, FaWhatsapp } from "react-icons/fa";
-import { HiCheck, HiPause, HiPlay } from "react-icons/hi";
+import {
+  FaCamera,
+  FaFacebookF,
+  FaGlasses,
+  FaImage,
+  FaLink,
+  FaWhatsapp,
+} from "react-icons/fa";
+import { HiCheck, HiPause, HiPlay, HiX } from "react-icons/hi";
 import { IoIosPricetags } from "react-icons/io";
 import { SiGmail } from "react-icons/si";
 import { useLocation, useSearchParams } from "react-router-dom";
 import {
   EmailShareButton,
   FacebookShareButton,
-  WhatsappShareButton
+  WhatsappShareButton,
 } from "react-share";
+import { FcNext, FcPrevious } from "react-icons/fc";
+import GlassesOverlay from "@/components/overlays/GlassesOverlay";
+import ImagesOverlay from "@/components/overlays/ImagesOverlay";
 
 const HomePage = ({}) => {
   const [params, setParams] = useSearchParams();
@@ -36,6 +46,9 @@ const HomePage = ({}) => {
   const [recordOn, setRecordOn] = useState(true);
   const [priceModal, setPriceModal] = useState({ item: null, isOpen: false });
   const [copied, setCopied] = useState(false);
+
+  const [imagesOverlayShown, setImagesOverlayShown] = useState(false);
+  const [glassesOverlayShown, setGlassesOverlayShown] = useState(false);
 
   const toggleLoading = (isLoadingVisible) => {
     refLoading.current.style.display = isLoadingVisible ? "block" : "none";
@@ -53,9 +66,7 @@ const HomePage = ({}) => {
 
   const onGlassesSelect = (model) => {
     setSelectedGlasses(model);
-    JEELIZVTOWIDGET.load_modelStandalone(
-      `${API_URL}/models/${model}`
-    );
+    JEELIZVTOWIDGET.load_modelStandalone(`${API_URL}/models/${model}`);
   };
 
   const takeScreenshot = () => {
@@ -97,216 +108,284 @@ const HomePage = ({}) => {
   }, []);
 
   return (
-    <main className="flex flex-col h-screen">
-      <nav className="h-12 bg-gray-800">
-        <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 h-full">
-          {/* <h1 className="text-white font-bold text-xl">Jeeliz VTO</h1> */}
-          <img
-            src={`${API_URL}/logo.png`}
-            alt="logo"
-            className="h-10"
-          />
-          <FilterGlassesPopover />
-        </div>
-      </nav>
-
-      <div className="flex justify-between py-4 grow-1">
-        <div className="flex flex-col justify-between overflow-hidden bg-gray-100 h-full max-w-xs w-full border-y-2 border-r-2 border-blue-600 rounded-r-lg">
-          <div className="max-h-[90%] overflow-y-auto">
-            {glasses?.data.map((item) => (
-              <div key={item.id} className="flex items-center py-1 border">
-                <div
-                  onClick={() => onGlassesSelect(item.model3d)}
-                  className={`relative w-24 m-2 h-full`}
-                >
-                  <img
-                    src={`${API_URL}/features/${
-                      item.feature_image
-                    }`}
-                    alt="feature"
-                    className="w-full h-full"
-                  />
-                  {selectedGlasses === item.model3d ? (
-                    <div className="absolute flex items-center justify-center top-0 right-0 w-8 h-8 bg-blue-500 rounded-full">
-                      <HiCheck className="text-white" />
-                    </div>
-                  ) : null}
-                </div>
-                <div className=" break-words ml-4 h-full max-w-[10rem]">
-                  <p
-                    className={`text-base max-h-[50%] overflow-clip text-md my-4 ${
-                      selectedGlasses === item.model3d ? "underline" : ""
-                    }`}
-                  >
-                    {item.title}
-                  </p>
-                  <button
-                    onClick={() => setPriceModal({ item, isOpen: true })}
-                    className="flex items-center bg-gray-900 hover:bg-black text-white px-2 py-1 rounded-md"
-                  >
-                    <IoIosPricetags className="mr-2" />
-                    See Price
-                  </button>
-                </div>
-              </div>
-            ))}
+    <>
+      <main className="flex flex-col w-screen h-screen">
+        <nav className="h-12 bg-gray-800">
+          <div className="flex items-center justify-between max-w-[95%] mx-auto px-4 py-2 h-full">
+            <img src={`${API_URL}/logo.png`} alt="logo" className="h-10" />
+            <div className="lg:hidden flex">
+              <button
+                onClick={() => setGlassesOverlayShown(!glassesOverlayShown)}
+                className="disabled:opacity-60 disabled:cursor-not-allowed flex mx-4 text-white items-center w-8 h-8 justify-center px-2 py-1 rounded-full bg-gray-500 hover:bg-gray-700 focus:outline-none focus:shadow-outline"
+                disabled={imagesOverlayShown}
+              >
+                {glassesOverlayShown ? (
+                  <HiX className="h-4 w-4" />
+                ) : (
+                  <FaGlasses className="h-4 w-4" />
+                )}
+              </button>
+              <button
+                onClick={() => setImagesOverlayShown(!imagesOverlayShown)}
+                className={`disabled:opacity-60 disabled:cursor-not-allowed flex mx-4 text-white items-center w-8 h-8 justify-center px-2 py-1 rounded-full bg-gray-500 hover:bg-gray-700 focus:outline-none focus:shadow-outline`}
+                disabled={glassesOverlayShown}
+              >
+                {imagesOverlayShown ? (
+                  <HiX className="h-4 w-4" />
+                ) : (
+                  <FaImage className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            <FilterGlassesPopover />
           </div>
-          <div className="flex items-center bg-white max-h-[10%] py-2">
-            {glasses?.links
-              .slice(...getPagination(glasses.links))
-              .map((link, i) => (
-                <button
-                  key={i}
-                  onClick={() =>
-                    setParams({ page: Number.parseInt(link.label) })
-                  }
-                  className="font-semibold rounded-full border mx-1 w-10 h-10 hover:underline"
-                >
-                  {link.label}
-                </button>
+        </nav>
+
+        {/* Beginning */}
+        <div className="relative flex flex-grow p-4">
+          {/* GLASSES */}
+          <div className="lg:flex flex-col hidden w-80 h-full justify-between bg-gray-100">
+            <div className="flex-grow w-full overflow-y-scroll">
+              {glasses?.data.map((item) => (
+                <div key={item.id} className="flex h-28 p-1 border-b">
+                  <div
+                    onClick={() => onGlassesSelect(item.model3d)}
+                    className={`relative p-1 w-1/3 h-full cursor-pointer`}
+                  >
+                    <img
+                      src={`${API_URL}/features/${item.feature_image}`}
+                      alt="feature"
+                      className="w-full h-full"
+                    />
+                    {selectedGlasses === item.model3d ? (
+                      <div className="absolute flex items-center justify-center top-0 right-0 w-8 h-8 bg-blue-500 rounded-full">
+                        <HiCheck className="text-white" />
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="w-2/3 h-full flex flex-col justify-between p-2">
+                    <p
+                      onClick={() => onGlassesSelect(item.model3d)}
+                      className={`text-base font-medium cursor-pointer hover:underline overflow-hidden h-16 mb-1 text-md ${
+                        selectedGlasses === item.model3d ? "underline" : ""
+                      }`}
+                    >
+                      {item.title}
+                    </p>
+                    <button
+                      onClick={() => setPriceModal({ item, isOpen: true })}
+                      className="flex max-w-fit items-center bg-gray-900 hover:bg-black h-8 text-white px-2 py-1 rounded-md"
+                    >
+                      <IoIosPricetags className="mr-2" />
+                      See Price
+                    </button>
+                  </div>
+                </div>
               ))}
+            </div>
+
+            <div className="flex items-center justify-between bg-white h-10 px-4 mt-4 shadow">
+              <button
+                className="disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!glasses?.links.at(0).url}
+                onClick={() => {
+                  if (glasses?.links.at(0).url) {
+                    params.set("page", pageIndex - 1);
+                    setParams(params);
+                  }
+                }}
+              >
+                <FcPrevious />
+              </button>
+              <div>
+                {glasses?.links
+                  .slice(...getPagination(glasses.links))
+                  .map((link, i) => (
+                    <button
+                      key={i}
+                      onClick={() =>
+                        setParams({ page: Number.parseInt(link.label) })
+                      }
+                      className="font-semibold mx-1 hover:underline"
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+              </div>
+              <button
+                className="disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!glasses?.links.at(-1).url}
+                onClick={() => {
+                  if (glasses?.links.at(-1).url) {
+                    params.set("page", pageIndex + 1);
+                    setParams(params);
+                  }
+                }}
+              >
+                <FcNext />
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div
-          ref={refPlaceHolder}
-          className="relative mx-auto text-center w-screen h-screen max-w-[36rem] max-h-[36rem]"
-        >
-          <Canvas ref={refCanvas} />
-
+          {/* CANVAS */}
           <div
-            className={`absolute z-20 w-full ${
-              adjustMode ? "hidden" : "block"
-            }`}
+            ref={refPlaceHolder}
+            className="relative mx-4 text-center flex-grow"
           >
-            <button
-              className=" text-gray-200 font-bold text-base py-4 px-8 b-none m-2 bg-gray-800 bg-opacity-40 JeelizVTOWidgetAdjustEnterButton"
-              onClick={enter_adjustMode}
+            <Canvas ref={refCanvas} />
+
+            <div
+              className={`absolute z-20 w-full ${
+                adjustMode ? "hidden" : "block"
+              }`}
             >
-              Adjust
-            </button>
+              <button
+                className=" text-gray-200 font-bold text-base py-4 px-8 b-none m-2 bg-gray-800 bg-opacity-40 JeelizVTOWidgetAdjustEnterButton"
+                onClick={enter_adjustMode}
+              >
+                Adjust
+              </button>
+            </div>
+
+            <div
+              className={`w-full absolute bg-gray-800 bg-opacity-40 text-white z-20 text-base bottom-0 content-center py-8 ${
+                adjustMode ? "block" : "hidden"
+              }`}
+            >
+              Move the glasses to adjust them.
+              <button
+                className="text-gray-200 font-bold text-sm py-4 px-8 b-none m-2 bg-gray-800 bg-opacity-40 absolute right-2 bottom-2"
+                onClick={exit_adjustMode}
+              >
+                Quit
+              </button>
+            </div>
+
+            <div
+              className={`absolute flex justify-evenly z-20 w-full bottom-8 ${
+                adjustMode ? "hidden" : "block"
+              }`}
+            >
+              <ChangeButton handleChange={takeScreenshot}>
+                <FaCamera className="text-white w-8 h-8" />
+              </ChangeButton>
+
+              <ChangeButton
+                handleChange={async () => {
+                  if (recordOn) {
+                    await JEELIZVTOWIDGET.pause(true);
+                    setRecordOn(false);
+                  } else {
+                    await JEELIZVTOWIDGET.resume(true);
+                    setRecordOn(true);
+                  }
+                }}
+              >
+                {recordOn ? (
+                  <HiPause className="text-white w-8 h-8" />
+                ) : (
+                  <HiPlay className="text-white w-8 h-8" />
+                )}
+              </ChangeButton>
+            </div>
           </div>
 
-          <div
-            className={`w-full absolute bg-gray-800 bg-opacity-40 text-white z-20 text-base bottom-0 content-center py-8 ${
-              adjustMode ? "block" : "hidden"
-            }`}
-          >
-            Move the glasses to adjust them.
-            <button
-              className="text-gray-200 font-bold text-sm py-4 px-8 b-none m-2 bg-gray-800 bg-opacity-40 absolute right-2 bottom-2"
-              onClick={exit_adjustMode}
-            >
-              Quit
-            </button>
-          </div>
-
-          <div
-            className={`absolute flex justify-evenly z-20 w-full bottom-8 ${
-              adjustMode ? "hidden" : "block"
-            }`}
-          >
-            <ChangeButton handleChange={takeScreenshot}>
-              <FaCamera className="text-white w-8 h-8" />
-            </ChangeButton>
-
-            <ChangeButton
-              handleChange={async () => {
-                if (recordOn) {
-                  await JEELIZVTOWIDGET.pause(true);
-                  setRecordOn(false);
-                } else {
-                  await JEELIZVTOWIDGET.resume(true);
-                  setRecordOn(true);
-                }
-              }}
-            >
-              {recordOn ? (
-                <HiPause className="text-white w-8 h-8" />
+          {/* SNAPSHOTS */}
+          <div className="h-full w-64 lg:block hidden bg-gray-50 shadow-lg">
+            <div className="h-full overflow-y-auto">
+              {images.length ? (
+                images.map((src, idx) => (
+                  <Snapshot
+                    key={idx}
+                    src={src}
+                    images={images}
+                    share={() => setShareModal({ isOpen: true, src })}
+                    setImages={setImages}
+                  />
+                ))
               ) : (
-                <HiPlay className="text-white w-8 h-8" />
+                <Snapshot src={null} />
               )}
-            </ChangeButton>
+            </div>
           </div>
+
+          {/* Images Overlay */}
+          <ImagesOverlay
+            images={images}
+            isOpen={imagesOverlayShown}
+            setImages={setImages}
+            setShareModal={setShareModal}
+          />
+          {/* Glasses Overlay */}
+          <GlassesOverlay
+            isOpen={glassesOverlayShown}
+            data={glasses}
+            setPriceModal={setPriceModal}
+            onGlassesSelect={onGlassesSelect}
+            selectedGlasses={selectedGlasses}
+            getPagination={getPagination}
+          />
         </div>
 
-        {/* Right side bar containing the screenshot */}
-        <div className="h-full border-2 bg-gray-100 border-y-2 border-l-2 rounded-l-lg shadow">
-          <div className="h-full overflow-y-auto">
-            {images.length ? (
-              images.map((src, idx) => (
-                <Snapshot
-                  key={idx}
-                  src={src}
-                  images={images}
-                  share={() => setShareModal({ isOpen: true, src })}
-                  setImages={setImages}
-                />
-              ))
-            ) : (
-              <Snapshot src={null} />
+        {/* END */}
+
+        <div className="w-full h-8 bg-gray-900">
+          <div className="flex items-center justify-end max-w-[95%] mx-auto px-4 h-full">
+            <a href="#" className="text-white hover:underline text-base ">
+              Contact
+            </a>
+          </div>
+        </div>
+      </main>
+
+      {priceModal.item && (
+        <ModalWrapper
+          title={`Sunglasses N° ${priceModal.item.ref}`}
+          isOpen={priceModal.isOpen}
+          closeModal={() => setPriceModal({ item: null, isOpen: false })}
+        >
+          <div className="relative w-52 my-2 mx-auto h-full shadow">
+            <img
+              src={`${API_URL}/features/${priceModal.item.feature_image}`}
+              alt="feature"
+              className="w-full h-full"
+            />
+            <div className="absolute top-2 left-2 px-2 rounded-md text-sm bg-blue-400 text-blue-900 font-semibold">
+              {priceModal.item.price_with_discount ? (
+                <>
+                  <span className="line-through text-blue-800">
+                    {priceModal.item.price}
+                  </span>{" "}
+                  <span className="">
+                    {priceModal.item.price_with_discount}
+                  </span>
+                </>
+              ) : (
+                priceModal.item.price
+              )}{" "}
+              Dhs
+            </div>
+          </div>
+          <p className="text-lg font-semibold text-center">
+            {priceModal.item.title}
+          </p>
+          <p className="ml-2 text-base text-gray-600 font-medium">
+            Buy them now from :
+          </p>
+          <div className="flex flex-wrap">
+            {priceModal.item.providers.map(
+              ({ name, purchase_link: { link } }) => (
+                <a
+                  href={link}
+                  className="uppercase my-4 mx-2 flex items-center bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-md max-w-fit"
+                >
+                  {name}
+                </a>
+              )
             )}
           </div>
-        </div>
-        {priceModal.item && (
-          <ModalWrapper
-            title={`Sunglasses N° ${priceModal.item.ref}`}
-            isOpen={priceModal.isOpen}
-            closeModal={() => setPriceModal({ item: null, isOpen: false })}
-          >
-            <div className="relative w-52 my-2 mx-auto h-full shadow">
-              <img
-                src={`${API_URL}/features/${
-                  priceModal.item.feature_image
-                }`}
-                alt="feature"
-                className="w-full h-full"
-              />
-              <div className="absolute top-2 left-2 px-2 rounded-md text-sm bg-blue-400 text-blue-900 font-semibold">
-                {priceModal.item.price_with_discount ? (
-                  <>
-                    <span className="line-through text-blue-800">
-                      {priceModal.item.price}
-                    </span>{" "}
-                    <span className="">
-                      {priceModal.item.price_with_discount}
-                    </span>
-                  </>
-                ) : (
-                  priceModal.item.price
-                )}{" "}
-                Dhs
-              </div>
-            </div>
-            <p className="text-lg font-semibold text-center">
-              {priceModal.item.title}
-            </p>
-            <p className="ml-2 text-base text-gray-600 font-medium">
-              Buy them now from :
-            </p>
-            <div className="flex flex-wrap">
-              {priceModal.item.providers.map(
-                ({ name, purchase_link: { link } }) => (
-                  <a
-                    href={link}
-                    className="uppercase my-4 mx-2 flex items-center bg-gray-900 hover:bg-black text-white px-4 py-2 rounded-md max-w-fit"
-                  >
-                    {name}
-                  </a>
-                )
-              )}
-            </div>
-          </ModalWrapper>
-        )}
-      </div>
-
-      <div className="w-full h-8 bg-gray-900 absolute bottom-0">
-        <div className="flex items-center justify-end max-w-7xl mx-auto px-4 h-full">
-          <a href="#" className="text-white hover:underline text-base ">
-            Contact
-          </a>
-        </div>
-      </div>
+        </ModalWrapper>
+      )}
       <ModalWrapper
         closeModal={() => setShareModal({ src: "", isOpen: false })}
         isOpen={shareModal.isOpen}
@@ -360,7 +439,7 @@ const HomePage = ({}) => {
         )}
       </ModalWrapper>
       <LoadingSpinner ref={refLoading} />
-    </main>
+    </>
   );
 };
 

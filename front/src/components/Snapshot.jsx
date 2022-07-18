@@ -2,20 +2,21 @@ import http from "@/helpers/http";
 import { HiDownload, HiX } from "react-icons/hi";
 import { IoIosSend } from "react-icons/io";
 
+const PLACEHOLDER_LINK =
+  "https://cdn-icons-png.flaticon.com/512/15/15117.png?w=140";
+
 const Snapshot = ({ src, setImages, images, share }) => {
   return (
-    <div className="mt-8 mx-4 shadow-lg border-2 border-blue-500 rounded-md">
-      <div className=" flex justify-center items-center w-48 h-48 overflow-hidden">
+    <div className="my-2 mx-4 w-52 h-auto shadow-lg border border-gray-300 rounded-md p-1">
+      <div className=" flex justify-center items-center mx-auto w-full h-52  border border-gray-300">
         <img
-          src={
-            src ?? "https://cdn-icons-png.flaticon.com/512/15/15117.png?w=140"
-          }
+          src={src ?? PLACEHOLDER_LINK}
           alt="capture"
           width={src ? "100%" : "50"}
           height={src ? "100%" : "50"}
         />
       </div>
-      <div className="flex justify-between items-center border-2 border-t-blue-500 py-2 px-4 rounded-b-md">
+      <div className="flex justify-between items-center  py-1 px-4">
         <a
           download
           href={src}
@@ -36,11 +37,11 @@ const Snapshot = ({ src, setImages, images, share }) => {
         </button>
         <button
           onClick={async () => {
-            try{
+            try {
               await http.delete(`/screenshot/${src.split("/").pop()}`);
-              setImages(images.filter((name) => src !== name))
-            } catch(e){
-              console.log(e)
+              setImages(images.filter((name) => src !== name));
+            } catch (e) {
+              console.log(e);
             }
           }}
           className={`p-2 rounded-full bg-red-600 enabled:hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed`}
