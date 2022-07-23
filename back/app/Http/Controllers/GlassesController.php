@@ -14,6 +14,10 @@ use Illuminate\Support\Str;
 
 class GlassesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("json");
+    }
 
     public function show(Request $req, int $id)
     {
@@ -26,6 +30,15 @@ class GlassesController extends Controller
             "frameShape",
             "providers",
         ])->findOrFail($id);
+    }
+
+    public function select(Request $req, int $id){
+        // increase the score of the glasses
+        $glasses = Glasses::findOrFail($id);
+        $glasses->score++;
+        $glasses->save();
+        // return the glasses
+        return $glasses;
     }
 
     public function index(Request $req)

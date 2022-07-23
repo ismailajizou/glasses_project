@@ -23,7 +23,7 @@ const GlassesOverlay = ({
       }`}
     >
       <div className="flex flex-col h-full justify-between">
-        <div className="flex flex-wrap flex-grow content-start">
+        <div className="flex flex-wrap flex-grow overflow-scroll content-start">
           {data?.data.map((glass) => (
             <div key={glass.id} className="max-w-[12rem] rounded-lg border shadow-md bg-gray-800 border-gray-700 m-2">
               <div className="relative">

@@ -1,3 +1,4 @@
+import { getSnapshotUrl } from "@/helpers/getSnapshotUrl";
 import Snapshot from "../Snapshot";
 
 const ImagesOverlay = ({ isOpen, images, setImages, setShareModal }) => {
@@ -7,19 +8,19 @@ const ImagesOverlay = ({ isOpen, images, setImages, setShareModal }) => {
               isOpen ? "block" : "hidden"
             }`}
           >
-            <div className="flex flex-wrap">
+            <div className="flex h-full content-start flex-wrap overflow-scroll">
               {images.length ? (
-                images.map((src, idx) => (
+                images.map(({ id, name }) => (
                   <Snapshot
-                    key={idx}
-                    src={src}
+                    key={id}
+                    imageName={name}
                     images={images}
-                    share={() => setShareModal({ isOpen: true, src })}
+                    share={() => setShareModal({ isOpen: true,  imageSrc: getSnapshotUrl(name)})}
                     setImages={setImages}
                   />
                 ))
               ) : (
-                <Snapshot src={null} />
+                <Snapshot imageName={null} />
               )}
             </div>
           </div>

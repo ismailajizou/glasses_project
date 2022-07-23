@@ -1,6 +1,6 @@
 import Button from "./buttons/Button";
 
-const SubmitButton = ({ isSubmitting, className, isValid, ...props }) => {
+const SubmitButton = ({ isSubmitting, className, isValid, text = "Submit",  ...props }) => {
   return (
     <Button
       type="submit"
@@ -26,7 +26,7 @@ const SubmitButton = ({ isSubmitting, className, isValid, ...props }) => {
           />
         </svg>
       ) : null}
-      Submit
+      {text}
     </Button>
   );
 };

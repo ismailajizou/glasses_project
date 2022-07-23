@@ -3,11 +3,11 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\{
     AuthenticatedSessionController,
-    EmailVerificationNotificationController,
-    NewPasswordController,
-    PasswordResetLinkController,
-    RegisteredUserController,
-    VerifyEmailController
+    // EmailVerificationNotificationController,
+    // NewPasswordController,
+    // PasswordResetLinkController,
+    // RegisteredUserController,
+    // VerifyEmailController
 };
 use Illuminate\Support\Facades\Route;
 

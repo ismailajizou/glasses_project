@@ -1,6 +1,17 @@
 <?php
 
-use App\Http\Controllers\{AdminDashboardController, GlassesController, BrandsController, CollectionsController, FrameColorController, FrameMaterialController, HomeController, LensColorController, ProvidersController};
+use App\Http\Controllers\{
+    AdminDashboardController,
+    GlassesController,
+    BrandsController,
+    CollectionsController,
+    FrameColorController,
+    FrameMaterialController,
+    HomeController,
+    LensColorController,
+    ProvidersController,
+    SnapshotsController
+};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,18 +27,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-
-
 // administrative routes
 Route::get("/admin/dashboard", [AdminDashboardController::class, "index"])->middleware("auth");
 
 // Glasses routes
 Route::get("/glasses", [GlassesController::class, "index"]);
-Route::post("/glasses/add", [GlassesController::class, "store"]);//->middleware("auth");
+Route::post("/glasses/add", [GlassesController::class, "store"])->middleware("auth");
 Route::get("/glasses/{id}", [GlassesController::class, "show"]);
 Route::delete("/glasses/{id}", [GlassesController::class, "destroy"])->middleware("auth");
 Route::post("/glasses/{id}", [GlassesController::class, "edit"])->middleware("auth");
 Route::get("glasses/{ref}/model", [GlassesController::class, "model"]);
+Route::post("glasses/{id}/select", [GlassesController::class, "select"]);
 
 // Brand routes
 Route::get("/brands", [BrandsController::class, "index"]);
@@ -73,6 +83,15 @@ Route::post("/providers/{id}", [ProvidersController::class, "edit"])->middleware
 Route::delete("/providers/{id}", [ProvidersController::class, "destroy"])->middleware("auth");
 Route::post("/providers/{id}/restore", [ProvidersController::class, "restore"])->middleware("auth");
 
+
+// Snapshots routes
+Route::get("/snapshots", [SnapshotsController::class, "index"]);
+Route::post("/snapshots/add", [SnapshotsController::class, "store"]);
+Route::get("/snapshots/{id}", [SnapshotsController::class, "show"]);
+Route::delete("/snapshots/{id}", [SnapshotsController::class, "destroy"])->middleware("auth");
+Route::post("/snapshots/delete", [SnapshotsController::class, "destroyAll"])->middleware("auth");
+Route::get("/snapshots/image/{filename}", [SnapshotsController::class, "image"]);
+Route::get("/snapshots/stats", [SnapshotsController::class, "stats"]);
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/assets.php';

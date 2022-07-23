@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\GlassesController;
-use App\Models\{Collection, Brand, FrameColor, FrameMaterial, FrameShape, LensColor};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

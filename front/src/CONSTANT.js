@@ -1,1 +1,4 @@
-export const API_URL = import.meta.env.VITE_API_URL ?? "https://back.erprent.com"
+// IN DEV
+export const API_URL = "http://localhost:8000"
+// IN PROD
+// export const API_URL = "https://back.erprent.com"

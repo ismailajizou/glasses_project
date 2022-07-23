@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
-    // implement index method
+    public function __construct()
+    {
+        $this->middleware("json");
+    }
     public function index()
     {
         $stats = [

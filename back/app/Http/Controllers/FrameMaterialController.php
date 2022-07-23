@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 class FrameMaterialController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware("json");
+    }
+    
     public function index(Request $req)
     {
         return FrameMaterial::when($req->query("q"), function (Builder $q, string $search) {

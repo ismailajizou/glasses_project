@@ -8,7 +8,11 @@ use Illuminate\Http\Request;
 
 class CollectionsController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware("json");
+    }
+    
     public function index(Request $req)
     {
         return Collection::when($req->query("q"), function (Builder $q, string $search) {

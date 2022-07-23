@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Glasses;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
+    // make a constructor that will be used to abort if the request doesn't want json
+
+
     public function index(Request $request)
     {
         $queryParams = $request->query();

@@ -26,6 +26,7 @@ class Glasses extends Model
         "model3d",	"brand_id",	"collection_id",	
         "frame_type",	"frame_color_id",	"frame_shape_id",	
         "frame_material_id",	"lens_type",	"lens_color_id",
+        "score"
     ];
 
     // defining relationships

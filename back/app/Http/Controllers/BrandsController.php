@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class BrandsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("json");
+    }
+    
     public function index(Request $req)
     {
         return Brand::when($req->query("q"), function (Builder $q, string $search) {

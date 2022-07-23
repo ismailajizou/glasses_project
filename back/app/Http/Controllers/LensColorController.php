@@ -9,6 +9,11 @@ use Illuminate\Validation\Rule;
 
 class LensColorController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("json");
+    }
+    
     public function index(Request $req)
     {
         return LensColor::when($req->query("q"), function (Builder $q, string $search) {
